@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "yo marco!!!",
+  "description": "Esta extensión crea un botón en la raíz de los temas del foro de 
+                  la plataforma de u-cursos perteneciente a la Universidad de chile. 
+                  
+                  No existe ninguna relación con el ADI. 
+
+                  Esta hecha con la mejor de la buena, espero sea de su agrado.
+
+                  Creadp por cephei.1313@gmail.com",
+  "options_page": "opciones.html",
+  "version": "1.0",
+
+  "permissions": [
+    "tabs", "<all_urls>"
+  ],
+  "browser_action": {
+    "default_icon": "imagenes/icon.png",
+    "default_popup": "principal.html"
+  }
+}

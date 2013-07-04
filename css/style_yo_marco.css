@@ -1,0 +1,17 @@
+h2.yo_marco {
+	padding: 10px 0px 10px 20px;
+	height: 24px;
+}
+
+.container {
+	padding: 10px;
+}
+
+body {
+	width: 200px;
+	background-color: white;
+}
+
+#creditos {
+	display: none;
+}
