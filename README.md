@@ -1,4 +1,5 @@
 yoMarco_u-cursos
 ================
 
-extensión de chrome que agrega un botón de chorme para marcar un comentario en el foro. Guarda el permalink.
+Extensión de chrome que agrega un link en los mensajes del foro de www.u-cursos.cl que permite guardar el permalink automáticamente.
+
