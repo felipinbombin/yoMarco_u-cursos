@@ -24,6 +24,7 @@ function cargar_marcas(){
 		
 		nodeA.setAttribute("href",marcas[i].link);
 		nodeA.setAttribute("target", "_blank");
+		nodeA.setAttribute("id",i);
 
 		nodeA.appendChild(nodeText);
 		nodeH1.appendChild(nodeA);

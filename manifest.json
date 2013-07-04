@@ -1,30 +1,32 @@
 {
   "manifest_version": 2,
 
-  "version": "1.0",
+  "version": "0.8.0",
   "name": "yo marco!!!",
   "description": "Esta extensión crea un enlace en los mensajes del foro de 
                   la plataforma de u-cursos perteneciente a la Universidad de chile. 
                   
-                  No existe ninguna relación con el ADI. 
+                  Debo recalcar que no existe ninguna relación con el ADI en este proyecto. 
 
                   Esta hecha de puro buena onda por lo que no me putees si me mande un condoro,
                   mejor mandame un mail y lo arreglo :-).
 
                   Creadp por felipe h. (cephei.1313@gmail.com)",
-                  
+
   "options_page": "opciones.html",
   
-  "content_scripts": [
-    {
-      "matches": ["http://www.u-cursos.cl/*"],
-      "css": ["mystyles.css"],
-      "js": ["jquery.js", "myscript.js"]
+  "background": {
+    "page": "background.html"
+  },
+
+  "content_scripts": [{
+      "matches": ["https://www.u-cursos.cl/*foro*"],
+      "js": ["js/codigo_inyectar.js"]
     }
   ],
-  
+
   "permissions": [
-    "tabs", "http://www.u-cursos.cl/*foro*"
+    "tabs", "https://www.u-cursos.cl/*foro*"
   ],
 
   "browser_action": {

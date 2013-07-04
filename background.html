@@ -1,32 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="generator" content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39">
+<head>
     <meta charset="utf-8">
     <title>
-      Hello World
+      background
     </title>
-    <script type="text/javascript">
-
-        chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
-                if (changeInfo.status === 'complete') {
-                        chrome.tabs.executeScript(tabId, {
-                                code: ' if (document.body.innerText.indexOf("Cat") !=-1) {' +
-                                '     alert("Cat not found!");' +
-                                ' }'
-                        });
-                }
-        });
-        
-        chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.tabs.executeScript(null,
-                           {code:"document.body.bgColor='red'"});
-    });
-    </script>
-  </head>
-  <body>
+    <script type="text/javascript" src="js/escuchadores.js"></script>
+</head>
+<body>
     <h1>
-      Hello, World!
+      background
     </h1>
-  </body>
+</body>
 </html>
