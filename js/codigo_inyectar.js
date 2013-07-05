@@ -1,6 +1,7 @@
 
 // una vez que se termina de cargar la pagina se ejecuta la función
 document.addEventListener('DOMContentLoaded', function () {
+    console.log("ejecutar agregar_link();");
     agregar_link();
 });
 
@@ -31,10 +32,15 @@ function agregar_link() {
         // <ul>
         padre_del_padre = permalink.parentNode.parentNode;
 
-        link_marcar.setAttribute("href", "#");
+        link_marcar.setAttribute("href", "#"+padre_del_padre.id);
 
         link_marcar.addEventListener('click', function(){
-            console.log("este es el evento click");
+            var ref_etiqueta = this.childNodes[0];
+            
+            chrome.runtime.sendMessage({link: permalink.href}, function(response) {
+                ref_etiqueta.nodeValue = response.tag;    
+                console.log(response.tag);
+            });
         });
 
         li.appendChild(link_marcar);

@@ -21,7 +21,8 @@
 
   "content_scripts": [{
       "matches": ["https://www.u-cursos.cl/*foro*"],
-      "js": ["js/codigo_inyectar.js"]
+      "js": ["js/codigo_inyectar.js"],
+      "run_at": "document_start"
     }
   ],
 

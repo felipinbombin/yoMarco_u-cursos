@@ -18,7 +18,7 @@ function cargar_marcas(){
 	var nodeH1 = null;
 	
 	for(var i=0;i<marcas.length;i++) {
-		nodeText = document.createTextNode(marcas[i].titulo);
+		nodeText = document.createTextNode(marcas[i].link);
 		nodeA = document.createElement("a");
 		nodeH1 = document.createElement("h1");
 		
@@ -32,6 +32,15 @@ function cargar_marcas(){
 		div.appendChild(nodeH1);
 		div.appendChild(br);
 	}
+}
+
+function eliminar_marca(id) {
+	var marcas = localStorage["marcas"];
+	marcas = JSON.parse(marcas);
+
+	delete marcas[id];
+
+	localStorage["marcas"] = JSON.stringify(marcas);
 }
 
 function mostrar_creditos() {
