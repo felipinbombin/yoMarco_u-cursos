@@ -3,15 +3,7 @@
 
   "version": "0.8.0",
   "name": "yo marco!!!",
-  "description": "Esta extensión crea un enlace en los mensajes del foro de 
-                  la plataforma de u-cursos perteneciente a la Universidad de chile. 
-                  
-                  Debo recalcar que no existe ninguna relación con el ADI en este proyecto. 
-
-                  Esta hecha de puro buena onda por lo que no me putees si me mande un condoro,
-                  mejor mandame un mail y lo arreglo :-).
-
-                  Creadp por felipe h. (cephei.1313@gmail.com)",
+  "description": "Esta extensión crea un enlace en los mensajes de los foros de www.u-cursos.cl para ser guardados en un historial.",
 
   "background": {
     "page": "background.html"

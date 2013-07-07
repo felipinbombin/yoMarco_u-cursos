@@ -1,4 +1,7 @@
 
+/**
+    recibe mensajes de consulta de marcas y para guardar marcas
+*/
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 

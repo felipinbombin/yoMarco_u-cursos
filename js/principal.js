@@ -41,6 +41,7 @@ function cargar_marcas(){
 	var nodo_ayuda_link_texto = null;
 
 	for(var i=marcas.length-1; 0<=i;i--) {
+		
 		nodo_h1 = document.createElement("h1");
 		
 		nodo_titulo = document.createElement("a");
@@ -52,7 +53,7 @@ function cargar_marcas(){
 		nodo_fecha_ingreso = document.createElement("em");
 		nodo_fecha_ingreso_texto = document.createTextNode(marcas[i].fecha_ingreso);
 
-		nodo_ayuda_link = document.createElement("p");
+		nodo_ayuda_link = document.createElement("em");
 		nodo_ayuda_link_texto = document.createTextNode(marcas[i].link);
 
 		nodo_titulo.setAttribute("href", marcas[i].link);
@@ -62,13 +63,15 @@ function cargar_marcas(){
 		nodo_eliminar.setAttribute("class","eliminar");
 		nodo_eliminar.setAttribute("id", i);
 		nodo_eliminar.addEventListener("click", function() {
-			if (confirm("¿Estás segur@ que deseas eliminar la marca?"))
-				eliminar_marca(this.id);
+			if (confirm("¿Estás segur@ que deseas eliminar la marca?") && eliminar_marca(this.id)) {
+				div.innerHTML = "";
+				cargar_marcas();
+			}
 		});
 
 		nodo_fecha_ingreso.setAttribute("class", "fecha");
 
-		nodo_ayuda_link.setAttribute("class","ayuda");
+		nodo_ayuda_link.setAttribute("class","ayuda link");
 
 		nodo_titulo.appendChild(nodo_titulo_texto);
 		nodo_fecha_ingreso.appendChild(nodo_fecha_ingreso_texto);
@@ -85,12 +88,18 @@ function cargar_marcas(){
 }
 
 function eliminar_marca(id) {
-	var marcas = localStorage["marcas"];
-	marcas = JSON.parse(marcas);
+	try {
+		var marcas = localStorage["marcas"];
+		marcas = JSON.parse(marcas);
 
-	marcas.splice(id, 1);
+		marcas.splice(id, 1);
 
-	localStorage["marcas"] = JSON.stringify(marcas);
+		localStorage["marcas"] = JSON.stringify(marcas);
+		return true;
+	} catch(err) {
+		console.log("Error al eliminar: " + err.message);
+		return false;
+	}
 }
 
 function mostrar_creditos() {

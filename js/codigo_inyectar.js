@@ -2,8 +2,31 @@ var titulo_texto = null;
 
 // una vez que se termina de cargar la pagina se ejecuta la función
 document.addEventListener('DOMContentLoaded', function () {
+    
+    var url_dividida = document.URL.split("#");
+    if (url_dividida.length == 2) {
+        var tag = document.getElementById(url_dividida[1]);
+        var raiz = encontrar_raiz(tag);
+        
+        titulo_texto = raiz.childNodes[1].childNodes[2].childNodes[0].nodeValue;
+        agregar_links(raiz);
+    }
+    
     agregar_evento_click_a_titulos()
 });
+
+/**
+    utilizado cuando se carga una pagina de u-cursos que tiene mensajes abiertos (por ej. un permalink). Busca 
+    la raiz del tema para poner links en todos los post de ese thread.
+*/
+function encontrar_raiz(tag) {
+    
+    if (tag.className.search("raiz") > 0)
+        return tag;
+    else
+        return encontrar_raiz(tag.parentNode);
+}
+
 
 /**
     A cada titulo se le asocia un evento clic.
