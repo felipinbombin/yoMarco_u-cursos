@@ -44,7 +44,7 @@ function guardar_marca(dato) {
         var fecha = new Date();
         fecha = fecha.toLocaleString();
         
-        marcas.push({link: dato.link, titulo: dato.titulo, fecha_ingreso: fecha});
+        marcas.push({link: dato.link, titulo: dato.titulo, fecha_ingreso: fecha, comentario: ""});
 
         localStorage["marcas"] = JSON.stringify(marcas);
 

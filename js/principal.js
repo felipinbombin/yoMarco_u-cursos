@@ -17,7 +17,7 @@ function cargar_marcas(){
 	var div = document.getElementById("lista_marcas");
 
 	// si no hay nada almacenado se detiene
-	if (typeof marcas === "undefined" || marcas.length === 0){
+	if (typeof marcas === "undefined" || JSON.parse(marcas).length === 0){
 		var nodo_ayuda_texto = document.createTextNode("no has marcado ningún tema aún.");
 		var div_ayuda = document.createElement("div");
 
@@ -30,61 +30,147 @@ function cargar_marcas(){
 
 	marcas = JSON.parse(marcas);
 
-	var nodo_h1 = null;
-	var nodo_titulo = null;
-	var nodo_titulo_texto = null;
-	var nodo_eliminar = null;
-	var nodo_eliminar_texto = null;
-	var nodo_fecha_ingreso = null;
-	var nodo_fecha_ingreso_texto = null;
-	var nodo_ayuda_link = null;
-	var nodo_ayuda_link_texto = null;
+	/**
+		creación de tabla
+	*/
+	var nodo_table = null;
+	var nodo_thead = null;
+	var nodo_tr = null;
+	var nodo_th_titulo = null;
+	var nodo_th_comentario = null;
+	var nodo_th_opciones = null;
+	var nodo_tbody = null;
+
+	nodo_table = document.createElement("table");
+	nodo_table.setAttribute("class", "sortable");
+	nodo_thead = document.createElement("thead");
+	nodo_tr = document.createElement("tr");
+	nodo_tr.setAttribute("class", "odd");
+	nodo_th_titulo = document.createElement("th");
+	nodo_th_titulo.setAttribute("class", "string");
+	nodo_th_titulo.appendChild(document.createTextNode("Titulo"));
+	nodo_th_comentario = document.createElement("th");
+	nodo_th_comentario.setAttribute("class", "number gris");
+	nodo_th_comentario.appendChild(document.createTextNode("Comentario"));
+	nodo_th_opciones = document.createElement("th");
+	nodo_th_opciones.setAttribute("class", "opciones");
+	nodo_th_opciones.setAttribute("colspan", "2");
+	nodo_th_opciones.appendChild(document.createTextNode("Opciones"));
+	nodo_tbody = document.createElement("tbody");
+	nodo_tbody.setAttribute("id", "body");
+
+	nodo_tr.appendChild(nodo_th_titulo);
+	nodo_tr.appendChild(nodo_th_comentario);
+	nodo_tr.appendChild(nodo_th_opciones);
+	nodo_thead.appendChild(nodo_tr);
+
+	nodo_table.appendChild(nodo_thead);
+	nodo_table.appendChild(nodo_tbody);
+
+	div.appendChild(nodo_table);
+
+	/**
+		creación de cada fila de la tabla
+	*/
+	var nodo_tr = null;
+	var nodo_td_titulo_fecha = null;
+	var nodo_td_comentario_url = null;
+	var nodo_td_eliminar = null;
+	var nodo_td_comentar = null;
+	var nodo_h1_titulo = null;
+	var nodo_h2_fecha = null;
+	var nodo_a_titulo = null;
+	var nodo_h1_comentario = null;
+	var nodo_h1_span_comentario = null;
+	var nodo_h1_url = null;
+	var nodo_a_eliminar = null;
+	var nodo_a_comentario = null;
 
 	for(var i=marcas.length-1; 0<=i;i--) {
 		
-		nodo_h1 = document.createElement("h1");
-		
-		nodo_titulo = document.createElement("a");
-		nodo_titulo_texto = document.createTextNode(marcas[i].titulo);
+		nodo_tr = document.createElement("tr");
+		nodo_tr.setAttribute("class", "odd");
 
-		nodo_eliminar = document.createElement("a");
-		nodo_eliminar_texto = document.createTextNode("Eliminar");
+		nodo_td_titulo_fecha = document.createElement("td");
+		nodo_td_titulo_fecha.setAttribute("class", "string");
+		nodo_td_comentario_url = document.createElement("td");
+		nodo_td_comentario_url.setAttribute("class", "number");
+		nodo_td_eliminar = document.createElement("td");
+		nodo_td_eliminar.setAttribute("class", "opciones");
+		nodo_td_comentar = document.createElement("td");
+		nodo_td_comentar.setAttribute("class", "opciones");
 
-		nodo_fecha_ingreso = document.createElement("em");
-		nodo_fecha_ingreso_texto = document.createTextNode(marcas[i].fecha_ingreso);
+		nodo_h1_titulo = document.createElement("h1");
+		nodo_h2_fecha = document.createElement("h2");
+		nodo_h2_fecha.appendChild(document.createTextNode(marcas[i].fecha_ingreso));
 
-		nodo_ayuda_link = document.createElement("em");
-		nodo_ayuda_link_texto = document.createTextNode(marcas[i].link);
+		nodo_a_titulo = document.createElement("a");
+		nodo_a_titulo.setAttribute("href", marcas[i].link);
+		nodo_a_titulo.setAttribute("target", "_blank");
+		nodo_a_titulo.appendChild(document.createTextNode(marcas[i].titulo));
 
-		nodo_titulo.setAttribute("href", marcas[i].link);
-		nodo_titulo.setAttribute("target", "_blank");
+		nodo_h1_comentario = document.createElement("h1");
+		nodo_h1_span_comentario = document.createElement("span");
+		nodo_h1_span_comentario.appendChild(document.createTextNode(marcas[i].comentario)); 
 
-		nodo_eliminar.setAttribute("href","#");
-		nodo_eliminar.setAttribute("class","eliminar");
-		nodo_eliminar.setAttribute("id", i);
-		nodo_eliminar.addEventListener("click", function() {
+		nodo_h1_url = document.createElement("h2");
+		nodo_h1_url.appendChild(document.createTextNode(marcas[i].link));
+
+		nodo_a_eliminar = document.createElement("a");
+		nodo_a_eliminar.setAttribute("href", "#");
+		nodo_a_eliminar.setAttribute("id", i);
+		nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
+		nodo_a_eliminar.addEventListener("click", function() {
 			if (confirm("¿Estás segur@ que deseas eliminar la marca?") && eliminar_marca(this.id)) {
-				div.innerHTML = "";
-				cargar_marcas();
+				refrescar_vista();
 			}
 		});
+		
+		nodo_a_comentario = document.createElement("a");
+		nodo_a_comentario.setAttribute("href", "#");
+		nodo_a_comentario.setAttribute("id", i);
+		nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
+		nodo_a_comentario.addEventListener("click", function() {
+			var comentario = prompt("comenta la marca:", get_comentario(this.id));
+			set_comentario(comentario, this.id);
+			refrescar_vista();
+		});
 
-		nodo_fecha_ingreso.setAttribute("class", "fecha");
-
-		nodo_ayuda_link.setAttribute("class","ayuda link");
-
-		nodo_titulo.appendChild(nodo_titulo_texto);
-		nodo_fecha_ingreso.appendChild(nodo_fecha_ingreso_texto);
-		nodo_eliminar.appendChild(nodo_eliminar_texto);
-		nodo_ayuda_link.appendChild(nodo_ayuda_link_texto);
-
-		nodo_h1.appendChild(nodo_titulo);
-		nodo_h1.appendChild(nodo_fecha_ingreso);
-		nodo_h1.appendChild(nodo_eliminar);
-		nodo_h1.appendChild(nodo_ayuda_link);
-
-		div.appendChild(nodo_h1);
+		nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
+		nodo_h1_titulo.appendChild(nodo_a_titulo);
+		nodo_td_titulo_fecha.appendChild(nodo_h1_titulo);
+		nodo_td_titulo_fecha.appendChild(nodo_h2_fecha);
+		nodo_td_comentario_url.appendChild(nodo_h1_comentario);
+		nodo_td_comentario_url.appendChild(nodo_h1_url);		
+		nodo_td_eliminar.appendChild(nodo_a_eliminar);
+		nodo_td_comentar.appendChild(nodo_a_comentario);
+		nodo_tr.appendChild(nodo_td_titulo_fecha);
+		nodo_tr.appendChild(nodo_td_comentario_url);
+		nodo_tr.appendChild(nodo_td_eliminar);
+		nodo_tr.appendChild(nodo_td_comentar);
+		nodo_tbody.appendChild(nodo_tr);
 	}
+}
+
+function refrescar_vista() {
+	var div = document.getElementById("lista_marcas");
+	div.innerHTML = "";
+	cargar_marcas();
+}
+
+function get_comentario(id) {
+	var marcas = localStorage["marcas"];
+	marcas = JSON.parse(marcas);
+
+	return marcas[id].comentario;
+}
+
+function set_comentario(comentario, id) {
+	var marcas = localStorage["marcas"];
+	marcas = JSON.parse(marcas);
+		
+	marcas[id].comentario = comentario;
+	localStorage["marcas"] = JSON.stringify(marcas);
 }
 
 function eliminar_marca(id) {
@@ -110,4 +196,3 @@ function mostrar_creditos() {
 	else if (creditos.style.display == "none" || creditos.style.display == "" )
 		creditos.style.display = "block";
 }
-
