@@ -1,5 +1,5 @@
 h2.yo_marco {
-	padding: 10px 0px 10px 20px;
+	padding: 10px 0px 10px 10px;
 	height: 24px;
 }
 
@@ -8,10 +8,22 @@ h2.yo_marco {
 }
 
 body {
-	width: 200px;
+	width: 500px;
 	background-color: white;
 }
 
 #creditos {
 	display: none;
+}
+
+.eliminar {
+	padding-left: 10px;
+}
+
+.fecha {
+	padding-left: 10px;
+}
+
+#lista_marcas h1 {
+	padding: 0px;
 }

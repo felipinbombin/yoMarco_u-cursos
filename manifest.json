@@ -13,8 +13,6 @@
 
                   Creadp por felipe h. (cephei.1313@gmail.com)",
 
-  "options_page": "opciones.html",
-  
   "background": {
     "page": "background.html"
   },
@@ -27,7 +25,8 @@
   ],
 
   "permissions": [
-    "tabs", "https://www.u-cursos.cl/*foro*"
+    "tabs", 
+    "https://www.u-cursos.cl/*foro*"
   ],
 
   "browser_action": {
