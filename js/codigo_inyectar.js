@@ -75,8 +75,6 @@ function agregar_link(permalink) {
                 chrome.runtime.sendMessage({metodo:"evento_click_marcar", link: this.href, titulo: titulo_texto}, function(response) {
                     ref_etiqueta.nodeValue = response.tag;    
                     console.log(response.tag);
-                    chrome.browserAction.setBadgeText({text: cantidad_marcas().toString()});
-                chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"}); 
                 });
             });
             link_marcar.setAttribute("href", permalink.href);

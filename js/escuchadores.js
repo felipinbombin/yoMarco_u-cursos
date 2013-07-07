@@ -20,6 +20,9 @@ chrome.runtime.onMessage.addListener(
             sendResponse({existe: false});
         
         } else if (request.metodo="evento_click_marcar" && guardar_marca({link: request.link, titulo: request.titulo})) {
+            // actualiza la cantidad de links que aparece en el icono de la extensión
+            chrome.browserAction.setBadgeText({text: cantidad_marcas().toString()});
+            chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"}); 
             sendResponse({tag: "marcado"});
         } else
             sendResponse(null);
@@ -46,6 +49,17 @@ function guardar_marca(dato) {
     } catch(err) {
         console.log("Error al guardar: " + err.message);
         return false;
+    }
+}
+
+function cantidad_marcas() {
+    var marcas = localStorage["marcas"];
+
+    if (typeof marcas === "undefined") {
+        return 0;
+    } else {
+        marcas = JSON.parse(marcas);
+        return marcas.length;
     }
 }
 

@@ -102,14 +102,3 @@ function mostrar_creditos() {
 		creditos.style.display = "block";
 }
 
-function cantidad_marcas() {
-	var marcas = localStorage["marcas"];
-
-	if (typeof marcas === "undefined") {
-		return 0;
-	} else {
-		marcas = JSON.parse(marcas);
-		return marcas.length;
-	}
-}
-
