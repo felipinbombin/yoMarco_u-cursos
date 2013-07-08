@@ -7,7 +7,7 @@ cosas por hacer:
 
 sincronizar datos con chrome.storage.sync para que la app se actualice en todos los pc ocn la misma cuenta.
 instalar ga.js para hacer seguimiento de las acciones de los usuarios.
-
+documentar aplicación.
 
 para mas adelante:
   embellecer los formularios de para eliminar y comentar.
