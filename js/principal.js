@@ -184,8 +184,10 @@ function cargar_marcas(){
 		nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
 		nodo_a_comentario.addEventListener("click", function() {
 			var comentario = prompt("comenta la marca:", get_comentario(this.id));
-			set_comentario(comentario, this.id);
-			refrescar_vista();
+			if (comentario != null) {
+				set_comentario(comentario, this.id);
+				refrescar_vista();
+			}
 		});
 
 		nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
