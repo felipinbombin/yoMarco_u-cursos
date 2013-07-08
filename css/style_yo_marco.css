@@ -16,24 +16,6 @@ body {
 	display: none;
 }
 
-.eliminar {
-	padding-left: 10px;
-	position: absolute;
-	right: 10px;
-}
-
-.fecha {
-	padding-left: 10px;
-	position: absolute;
-	right: 65px;
-}
-
-.link {
-	padding-left: 15px;
-	position: absolute;
-	right: 180px;
-}
-
 #lista_marcas h1 {
 	padding: 0px;
 }
