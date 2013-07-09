@@ -256,7 +256,12 @@ function eliminar_marca(id) {
 
 		marcas.splice(id, 1);
 
+		// se actualiza el badge con la cantidad de marcas
+		chrome.browserAction.setBadgeText({text: marcas.length.toString()});
+        chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
+        
 		localStorage["marcas"] = JSON.stringify(marcas);
+
 		return true;
 	} catch(err) {
 		console.log("Error al eliminar: " + err.message);

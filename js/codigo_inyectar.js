@@ -27,7 +27,6 @@ function encontrar_raiz(tag) {
         return encontrar_raiz(tag.parentNode);
 }
 
-
 /**
     A cada titulo se le asocia un evento clic.
 */
@@ -74,8 +73,8 @@ function agregar_link(permalink) {
     /**
         consulta si el link ya esta marcado (existe en la extensión 'yo_marco!!!').
     */
-    chrome.runtime.sendMessage({metodo:"agregar_link", link: permalink.href}, function(response) { 
-   
+    chrome.runtime.sendMessage({metodo:"existe_link", link: permalink.href}, function(response) { 
+    
         var texto = null;   
         var li = null;
         var link_marcar= null;
@@ -106,11 +105,18 @@ function agregar_link(permalink) {
         link_marcar.appendChild(texto);
         link_marcar.setAttribute("class", "yo_marco");
 
+        li.appendChild(link_marcar);
+
         // tag <ul>
         padre_del_padre = permalink.parentNode.parentNode;
+        // se verifica si esta marca corresponde al mensaje raiz del hilo
+        padre_raiz = padre_del_padre.parentNode.parentNode.parentNode;
 
-        li.appendChild(link_marcar);
-        padre_del_padre.insertBefore(li,padre_del_padre.childNodes[1]);
+        // si es el mensaje raiz se inserta más a la derecha para que aparezca a la derecha de "+1 -1" y a la izquierda de "responder"
+        if (padre_raiz.className.search("raiz") > 0)
+            padre_del_padre.insertBefore(li,padre_del_padre.childNodes[3]);
+        else 
+            padre_del_padre.insertBefore(li,padre_del_padre.childNodes[1]);
     });
     
 }
