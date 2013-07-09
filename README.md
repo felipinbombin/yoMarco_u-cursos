@@ -12,9 +12,9 @@ Para el futuro
 
 cosas por hacer:
 
-1. sincronizar datos con chrome.storage.sync para que la app se actualice en todos los pc ocn la misma cuenta.
+1. sincronizar datos con chrome.storage.sync para que la app se actualice en todos los pc con la misma cuenta.
 2. instalar ga.js para ver demanda de la extensión.
-3. documentar aplicación.
+3. documentar aplicación (hecho).
 4. embellecer los formularios de para eliminar y comentar.
 
 Si tienes alguna sugerencia enviame un correo cephei.1313@gmail.com :-)
