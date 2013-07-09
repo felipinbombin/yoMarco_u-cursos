@@ -19,3 +19,15 @@ body {
 #lista_marcas h1 {
 	padding: 0px;
 }
+
+.sortable {
+	margin-bottom: 10px; 
+}
+
+.json {
+	list-style-type: none;
+	padding: 0;
+	margin: 4px 0 4px 0;
+	color: #999;
+	font-style: italic;
+}

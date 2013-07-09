@@ -55,8 +55,30 @@ document.addEventListener('DOMContentLoaded', function () {
 	        doy : 4  // The week that contains Jan 4th is the first week of the year.
 	    }
 	});
+	// Asocia evento click al enlace mostrar JSON
+	document.getElementById("toggle-credito").addEventListener('click', function(){
+		var creditos = document.getElementById("creditos");
+
+		if (creditos.style.display == "block")
+			creditos.style.display = "none";
+		else if (creditos.style.display == "none" || creditos.style.display == "" )
+			creditos.style.display = "block";
+	});
+  	
 	// Asocia un evento click al enlace 'créditos'
-  	document.getElementById("toggle-credito").addEventListener('click', mostrar_creditos);
+  	document.getElementById("toggle-json").addEventListener('click', function(){
+		var json_marcas = document.getElementById("json");
+
+		if (json_marcas.style.display == "block") {
+			json_marcas.style.display = "none";
+			this.value = "Mostrar json";
+		} else if (json_marcas.style.display == "none" || json_marcas.style.display == "" ) {
+			json_marcas.appendChild(document.createTextNode(localStorage["marcas"]));
+			json_marcas.style.display = "block";
+			this.value = "Ocultar json";
+		}
+  	});
+
   	cargar_marcas();
 });
 
@@ -240,13 +262,4 @@ function eliminar_marca(id) {
 		console.log("Error al eliminar: " + err.message);
 		return false;
 	}
-}
-
-function mostrar_creditos() {
-	var creditos = document.getElementById("creditos");
-
-	if (creditos.style.display == "block")
-		creditos.style.display = "none";
-	else if (creditos.style.display == "none" || creditos.style.display == "" )
-		creditos.style.display = "block";
 }

@@ -188,7 +188,7 @@ tr td .detalle{display:none;width:auto;}
 tr td .abierto{display:block;}
 tr.nuevo td .detalle{display:block;}
 td.verde,td.gris,td.blanco,td.rojo,td.naranjo,tr.verde,tr.gris,tr.blanco,tr.rojo,tr.naranjo,col.verde,col.gris,col.blanco,col.rojo,col.naranjo,td.opciones,col.opciones{text-align:center;padding:1px 8px 1px 8px;white-space:nowrap;border-right:0px;}
-td.verde,tr.verde,col.verde,td.opciones,col.opciones{background:transparent url( '../images/opciones.png' ) repeat scroll top left;_background:#F9F4E8;}
+td.verde,tr.verde,col.verde,td.opciones,col.opciones{background:transparent url( '../imagenes/opciones.png' ) repeat scroll top left;_background:#F9F4E8;}
 td.gris,tr.gris,col.gris{background:transparent url( '../images/gris.png' ) repeat scroll top left;_background:#f4f4f4;}
 td.rojo,tr.rojo,col.rojo{background:#ffcccc;}
 td.del{text-decoration:line-through;}

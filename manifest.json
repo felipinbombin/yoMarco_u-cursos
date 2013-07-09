@@ -18,11 +18,14 @@
 
   "permissions": [
     "tabs", 
-    "https://www.u-cursos.cl/*foro*"
+    "https://www.u-cursos.cl/*foro*",
+    "storage"
   ],
 
   "browser_action": {
     "default_icon": "imagenes/icon.png",
     "default_popup": "principal.html"
-  }
+  },
+
+  "update_url": "http://www.amcontadores.cl/yomarco/update_yomarco.xml"
 }
