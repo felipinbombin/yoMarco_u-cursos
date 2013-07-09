@@ -68,14 +68,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Asocia un evento click al enlace 'créditos'
   	document.getElementById("toggle-json").addEventListener('click', function(){
 		var json_marcas = document.getElementById("json");
+		this.innerHTML = "";
 
 		if (json_marcas.style.display == "block") {
 			json_marcas.style.display = "none";
-			this.value = "Mostrar json";
+				
+			this.appendChild(document.createTextNode(">Mostrar json"));
 		} else if (json_marcas.style.display == "none" || json_marcas.style.display == "" ) {
+			json_marcas.innerHTML = "";
 			json_marcas.appendChild(document.createTextNode(localStorage["marcas"]));
 			json_marcas.style.display = "block";
-			this.value = "Ocultar json";
+			
+			this.appendChild(document.createTextNode("<Ocultar json"));
 		}
   	});
 
