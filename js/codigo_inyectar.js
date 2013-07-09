@@ -95,8 +95,7 @@ function agregar_link(permalink) {
                 var ref_etiqueta = this.childNodes[0];
                 
                 chrome.runtime.sendMessage({metodo:"evento_click_marcar", link: this.href, titulo: titulo_texto}, function(response) {
-                    ref_etiqueta.nodeValue = response.tag;    
-                    console.log(response.tag);
+                    ref_etiqueta.nodeValue = response.tag;
                 });
             });
             link_marcar.setAttribute("href", permalink.href);

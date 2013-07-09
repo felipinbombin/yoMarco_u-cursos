@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "version": "1.0.0",
-  "name": "yo marco!!!",
+  "version": "0.8.0",
+  "name": "yoMarco u-cursos",
   "description": "Esta extensión crea un enlace en los mensajes de los foros de www.u-cursos.cl para ser guardados en un historial.",
 
   "background": {
@@ -19,7 +19,6 @@
   "permissions": [
     "tabs", 
     "https://www.u-cursos.cl/*foro*",
-    "storage"
   ],
 
   "browser_action": {
