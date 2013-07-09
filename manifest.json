@@ -18,7 +18,7 @@
 
   "permissions": [
     "tabs", 
-    "https://www.u-cursos.cl/*foro*",
+    "https://www.u-cursos.cl/*foro*"
   ],
 
   "browser_action": {
