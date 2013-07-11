@@ -3,7 +3,7 @@
 	una vez que se termina de cargar la pagina se ejecuta la función 
 */
 document.addEventListener('DOMContentLoaded', function () {
-	chrome.storage.clear(function(){});
+	
 	moment.lang('es', {
 	    months : "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split("_"),
 	    monthsShort : "ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.".split("_"),
@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	        doy : 4  // The week that contains Jan 4th is the first week of the year.
 	    }
 	});
-	// Asocia evento click al enlace mostrar JSON
+
+	// Asocia un evento click al enlace 'créditos'
 	document.getElementById("toggle-credito").addEventListener('click', function(){
 		var creditos = document.getElementById("creditos");
 
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			creditos.style.display = "block";
 	});
   	
-	// Asocia un evento click al enlace 'créditos'
+	// Asocia evento click al enlace mostrar JSON
   	document.getElementById("toggle-json").addEventListener('click', function(){
 		var json_marcas = document.getElementById("json");
 		this.innerHTML = "";
@@ -76,11 +77,22 @@ document.addEventListener('DOMContentLoaded', function () {
 				
 			this.appendChild(document.createTextNode(">Mostrar json"));
 		} else if (json_marcas.style.display == "none" || json_marcas.style.display == "" ) {
-			json_marcas.innerHTML = "";
-			json_marcas.appendChild(document.createTextNode(localStorage["marcas"]));
-			json_marcas.style.display = "block";
-			
-			this.appendChild(document.createTextNode("<Ocultar json"));
+
+			var ref_toggle_json = this;
+			chrome.storage.sync.get("marcas", function(almacen_json) {
+				var marcas;
+				// si no hay nada almacenado, se crea un arreglo de marcas
+		        if (typeof almacen_json.marcas === "undefined")
+		            marcas = [];
+		        else
+		        	marcas = almacen_json.marcas;
+		        
+				json_marcas.innerHTML = "";
+				json_marcas.appendChild(document.createTextNode(JSON.stringify(marcas)));
+				json_marcas.style.display = "block";
+
+				ref_toggle_json.appendChild(document.createTextNode("<Ocultar json"));
+			});
 		}
   	});
 
@@ -88,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /*
-	Carga las marcas almacenadas en el localStorage del navegador
+	Carga las marcas almacenadas en chrome.storage.sync del navegador
 */
 function cargar_marcas(){
 	
@@ -207,8 +219,8 @@ function cargar_marcas(){
 			nodo_a_eliminar.setAttribute("id", i);
 			nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
 			nodo_a_eliminar.addEventListener("click", function() {
-				if (confirm("¿Estás segur@ que deseas eliminar la marca?") && eliminar_marca(this.id)) {
-					refrescar_vista();
+				if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
+					eliminar_marca(this.id)
 				}
 			});
 			
@@ -217,11 +229,7 @@ function cargar_marcas(){
 			nodo_a_comentario.setAttribute("id", i);
 			nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
 			nodo_a_comentario.addEventListener("click", function() {
-				var comentario = prompt("comenta la marca:", get_comentario(this.id));
-				if (comentario != null) {
-					set_comentario(comentario, this.id);
-					refrescar_vista();
-				}
+				editar_comentario(this.id);
 			});
 
 			nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
@@ -247,37 +255,32 @@ function refrescar_vista() {
 	cargar_marcas();
 }
 
-function get_comentario(id) {
-	var marcas = localStorage["marcas"];
-	marcas = JSON.parse(marcas);
-
-	return marcas[id].comentario;
-}
-
-function set_comentario(comentario, id) {
-	var marcas = localStorage["marcas"];
-	marcas = JSON.parse(marcas);
+function editar_comentario(id) {
+	chrome.storage.sync.get("marcas", function(almacen_json) {
+		var marcas = almacen_json.marcas;
 		
-	marcas[id].comentario = comentario;
-	localStorage["marcas"] = JSON.stringify(marcas);
+		var comentario = prompt("comenta la marca:", marcas[id].comentario);
+
+		if (comentario != null) {
+			marcas[id].comentario = comentario;
+			// se actualizan los datos
+		    chrome.storage.sync.set({marcas: marcas}, function() {
+		        refrescar_vista();
+		    });
+		}
+	});
 }
 
 function eliminar_marca(id) {
-	try {
-		var marcas = localStorage["marcas"];
-		marcas = JSON.parse(marcas);
+	chrome.storage.sync.get("marcas", function(almacen_json) {
+		var marcas = almacen_json.marcas;
 
+		// se elimina la marca específicada por el id
 		marcas.splice(id, 1);
 
-		// se actualiza el badge con la cantidad de marcas
-		chrome.browserAction.setBadgeText({text: marcas.length.toString()});
-        chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
-        
-		localStorage["marcas"] = JSON.stringify(marcas);
-
-		return true;
-	} catch(err) {
-		console.log("Error al eliminar: " + err.message);
-		return false;
-	}
+		// se actualizan los datos
+	    chrome.storage.sync.set({marcas: marcas}, function() {
+	        refrescar_vista();
+	    });
+	});	
 }

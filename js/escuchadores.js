@@ -1,14 +1,13 @@
-
 /**
-    recibe mensajes de consulta de marcas y para guardar marcas
+    Actualiza la cantidad de links que aparece en el icono de la extensión
+    cada vez que se hace un cambio al elemento marcas
 */
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    console.log("Se actualiza el badge.");
 
-        // actualiza la cantidad de links que aparece en el icono de la extensión
-        chrome.browserAction.setBadgeText({text: request.cantidad_marcas.toString()});
-        chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
-        return true;
+    chrome.browserAction.setBadgeText({text: changes.marcas.newValue.length.toString()});
+    chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
+
 });
 
 /**
@@ -23,7 +22,7 @@ chrome.runtime.onStartup.addListener(function() {
 /**
     Se ejecuta cuando la extension es iniciada por primera vez, después de una 
     actualización de la extensión o una actualización del navegador
-*/
+
 chrome.runtime.onInstalled.addListener(function(details) {
     alert("onInstalled.addListener: " + details.reason);
     switch(details.reason) {
@@ -38,4 +37,4 @@ chrome.runtime.onInstalled.addListener(function(details) {
             break;
     }
     return true;
-});
+});*/

@@ -107,9 +107,8 @@ function agregar_link(permalink) {
                 var ref_etiqueta = this.childNodes[0];
                 var ref_link = this.href;
 
-                // se recupera el arreglo de marcas y se agrega la nueva
+                // se recupera el arreglo de marcas y se agrega la nueva.
                 chrome.storage.sync.get("marcas", function(almacen_json) {
-                    console.log("a marcar");
                     // si no hay nada almacenado, se crea un arreglo de marcas
                     if (typeof almacen_json.marcas === "undefined")
                         almacen_json.marcas = [];
@@ -119,10 +118,7 @@ function agregar_link(permalink) {
 
                     // se actualizan los datos
                     chrome.storage.sync.set({marcas: almacen_json.marcas}, function() {
-                        console.log("se actualizan los datos.");
                         ref_etiqueta.nodeValue = "marcado";
-                        // actualiza la cantidad de links que aparece en el icono de la extensión
-                        chrome.runtime.sendMessage({cantidad_marcas: almacen_json.marcas.length}, function(response){console.log("se actulizó la cantidad.");});
                     });
 
                 });
