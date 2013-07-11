@@ -73,8 +73,20 @@ function agregar_link(permalink) {
     /**
         consulta si el link ya esta marcado (existe en la extensión 'yo_marco!!!').
     */
-    chrome.runtime.sendMessage({metodo:"existe_link", link: permalink.href}, function(response) { 
-    
+    chrome.storage.sync.get("marcas", function(almacen_json) {
+
+        var existe_marca = false;
+
+        // si no hay nada almacenado o el largo del arreglo de marcas es 0 => el link no existe
+        if (typeof almacen_json.marcas != "undefined" && almacen_json.marcas != 0) {
+            for(var i=0;i<almacen_json.marcas.length;i++){
+                if (almacen_json.marcas[i].link === permalink.href) {
+                    existe_marca = true;
+                    break;
+                }
+            }
+        }
+
         var texto = null;   
         var li = null;
         var link_marcar= null;
@@ -86,16 +98,33 @@ function agregar_link(permalink) {
         /**
             Si ya esta registrado se anota como 'marcado' y no se le asocia un evento click
         */
-        if (response.existe)
+        if (existe_marca)
             texto = document.createTextNode("marcado");    
         else {
             texto = document.createTextNode("marcar"); 
             link_marcar.addEventListener('click', function(){
                 //tag a que contiene el texto "marcar"
                 var ref_etiqueta = this.childNodes[0];
-                
-                chrome.runtime.sendMessage({metodo:"evento_click_marcar", link: this.href, titulo: titulo_texto}, function(response) {
-                    ref_etiqueta.nodeValue = response.tag;
+                var ref_link = this.href;
+
+                // se recupera el arreglo de marcas y se agrega la nueva
+                chrome.storage.sync.get("marcas", function(almacen_json) {
+                    console.log("a marcar");
+                    // si no hay nada almacenado, se crea un arreglo de marcas
+                    if (typeof almacen_json.marcas === "undefined")
+                        almacen_json.marcas = [];
+                    
+                    // se agrega una marca al arreglo de marcas
+                    almacen_json.marcas.push({link: ref_link, titulo: titulo_texto, fecha_ingreso: fecha_ahora_con_formato(), comentario: ""});
+
+                    // se actualizan los datos
+                    chrome.storage.sync.set({marcas: almacen_json.marcas}, function() {
+                        console.log("se actualizan los datos.");
+                        ref_etiqueta.nodeValue = "marcado";
+                        // actualiza la cantidad de links que aparece en el icono de la extensión
+                        chrome.runtime.sendMessage({cantidad_marcas: almacen_json.marcas.length}, function(response){console.log("se actulizó la cantidad.");});
+                    });
+
                 });
             });
             link_marcar.setAttribute("href", permalink.href);
@@ -116,6 +145,29 @@ function agregar_link(permalink) {
             padre_del_padre.insertBefore(li,padre_del_padre.childNodes[3]);
         else 
             padre_del_padre.insertBefore(li,padre_del_padre.childNodes[1]);
-    });
+
+    });    
+}
+
+/**
+    Entrega la fecha actual formateada a YYYY-MM-DD hh:mm:ss
+*/
+function fecha_ahora_con_formato() {
+    var fecha = new Date();
+    var dateStr = padStr(fecha.getFullYear()) + "-" + 
+                  padStr(1 + fecha.getMonth()) + "-" + 
+                  padStr(fecha.getDate()) + " " +
+                  padStr(fecha.getHours()) + ":" +
+                  padStr(fecha.getMinutes()) + ":" +
+                  padStr(fecha.getSeconds());
     
+    return dateStr;
+}
+
+/**
+    si un día o mes es un número de una unidad, este lo reemplaza por uno 
+    de dos dígitos. Ej 1 -> 01
+*/
+function padStr(i) {
+    return (i < 10) ? "0" + i : "" + i;
 }

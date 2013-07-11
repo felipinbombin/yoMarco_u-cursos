@@ -1,9 +1,22 @@
 {
+  "name": "yoMarco u-cursos",
+  "version": "0.8.0",
   "manifest_version": 2,
 
-  "version": "0.8.0",
-  "name": "yoMarco u-cursos",
   "description": "Esta extensión crea un enlace en los mensajes de los foros de www.u-cursos.cl para ser guardados en un historial.",
+  "icons": { "16": "imagenes/icon16.png",
+             "32": "imagenes/icon32.png",
+             "48": "imagenes/icon48.png",
+             "128": "imagenes/icon128.png" },
+
+  "browser_action": {
+    "default_icon": {
+      "19": "imagenes/icon19.png",
+      "38": "imagenes/icon38.png"
+    },
+    "default_title": "yoMarco u-cursos",
+    "default_popup": "principal.html"
+  },
 
   "background": {
     "page": "background.html"
@@ -18,13 +31,9 @@
 
   "permissions": [
     "tabs", 
-    "https://www.u-cursos.cl/*foro*"
+    "https://www.u-cursos.cl/*foro*",
+    "storage"
   ],
-
-  "browser_action": {
-    "default_icon": "imagenes/icon.png",
-    "default_popup": "principal.html"
-  },
 
   "update_url": "http://www.amcontadores.cl/yomarco/update_yomarco.xml"
 }

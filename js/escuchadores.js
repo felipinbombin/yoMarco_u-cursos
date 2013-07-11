@@ -5,71 +5,11 @@
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
-        if (request.metodo==="existe_link") {
-            var marcas = localStorage["marcas"];
-
-            if (typeof marcas === "undefined" || marcas.length === 0) {
-                sendResponse({existe: false});
-                return true;
-            }
-            
-            marcas = JSON.parse(marcas);
-
-            for(var i=0;i<marcas.length;i++){
-                if (marcas[i].link === request.link) {
-                    sendResponse({existe: true});
-                    return true;
-                }
-            }
-
-            sendResponse({existe: false});
-        
-        } else if (request.metodo="evento_click_marcar" && guardar_marca({link: request.link, titulo: request.titulo})) {
-            // actualiza la cantidad de links que aparece en el icono de la extensión
-            chrome.browserAction.setBadgeText({text: cantidad_marcas().toString()});
-            chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
-            
-            sendResponse({tag: "marcado"});
-        } else
-            sendResponse(null);
-
+        // actualiza la cantidad de links que aparece en el icono de la extensión
+        chrome.browserAction.setBadgeText({text: request.cantidad_marcas.toString()});
+        chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
         return true;
 });
-
-function guardar_marca(dato) {
-    try {
-        var marcas = localStorage["marcas"];
-
-        // si no hay nada almacenado
-        if (typeof marcas === "undefined")
-            marcas = [];
-        else
-            marcas = JSON.parse(marcas);
-
-        var fecha = new Date();
-        fecha = fecha.toLocaleString();
-        
-        marcas.push({link: dato.link, titulo: dato.titulo, fecha_ingreso: fecha, comentario: ""});
-
-        localStorage["marcas"] = JSON.stringify(marcas);
-
-        return true;
-    } catch(err) {
-        console.log("Error al guardar: " + err.message);
-        return false;
-    }
-}
-
-function cantidad_marcas() {
-    var marcas = localStorage["marcas"];
-
-    if (typeof marcas === "undefined") {
-        return 0;
-    } else {
-        marcas = JSON.parse(marcas);
-        return marcas.length;
-    }
-}
 
 /**
     Se ejecuta cuando un usuario de logea en el browser
@@ -83,18 +23,19 @@ chrome.runtime.onStartup.addListener(function() {
 /**
     Se ejecuta cuando la extension es iniciada por primera vez, después de una 
     actualización de la extensión o una actualización del navegador
-
-chrome.runtime.onInstalled.addListener(function(object details) {
+*/
+chrome.runtime.onInstalled.addListener(function(details) {
     alert("onInstalled.addListener: " + details.reason);
     switch(details.reason) {
         case "install":
 
             break;
         case "update":
-
+            console.log(details.previousVersion());
             break;
         case "chrome_update":
 
             break;
     }
-});*/
+    return true;
+});
