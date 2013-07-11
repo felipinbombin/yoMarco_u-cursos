@@ -11,20 +11,11 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 });
 
 /**
-    Se ejecuta cuando un usuario de logea en el browser
-
-chrome.runtime.onStartup.addListener(function() {
-    alert("hola"):
-    chrome.browserAction.setBadgeText({text: cantidad_marcas().toString()});
-    chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"};
-});*/
-
-/**
     Se ejecuta cuando la extension es iniciada por primera vez, después de una 
     actualización de la extensión o una actualización del navegador
-
+*/
 chrome.runtime.onInstalled.addListener(function(details) {
-    alert("onInstalled.addListener: " + details.reason);
+    
     switch(details.reason) {
         case "install":
 
@@ -37,4 +28,4 @@ chrome.runtime.onInstalled.addListener(function(details) {
             break;
     }
     return true;
-});*/
+});
