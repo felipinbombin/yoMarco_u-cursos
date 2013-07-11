@@ -261,13 +261,16 @@ function editar_comentario(id) {
 		
 		var comentario = prompt("comenta la marca:", marcas[id].comentario);
 
-		if (comentario != null) {
-			marcas[id].comentario = comentario;
-			// se actualizan los datos
-		    chrome.storage.sync.set({marcas: marcas}, function() {
-		        refrescar_vista();
-		    });
-		}
+		if (comentario != null)
+			if (comentario.length > 50) {
+				alert("Tú comentario no puede exceder los 50 caracteres(" + comentario.length + ")");
+			} else {
+				marcas[id].comentario = comentario;
+				// se actualizan los datos
+			    chrome.storage.sync.set({marcas: marcas}, function() {
+			        refrescar_vista();
+			    });
+			}
 	});
 }
 
