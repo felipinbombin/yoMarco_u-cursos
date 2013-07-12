@@ -1,9 +1,20 @@
+// configuración de googleAnalytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-42211163-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = 'https://ssl.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
 
 /** 
 	una vez que se termina de cargar la pagina se ejecuta la función 
 */
 document.addEventListener('DOMContentLoaded', function () {
-	
+
+	// Configuración de moment.js a español
 	moment.lang('es', {
 	    months : "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split("_"),
 	    monthsShort : "ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.".split("_"),
