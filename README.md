@@ -18,3 +18,5 @@ cosas por hacer:
 4. embellecer los formularios de para eliminar y comentar.
 
 Si tienes alguna sugerencia enviame un correo cephei.1313@gmail.com :-)
+
+[![githalytics.com alpha](https://cruel-carlota.pagoda.com/afdddbf6a0e6e1ce5073289e02ce6669 "githalytics.com")](http://githalytics.com/felipinbombin/yoMarco_u-cursos)
