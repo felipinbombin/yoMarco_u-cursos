@@ -136,13 +136,14 @@ function agregar_link(permalink) {
         // se verifica si esta marca corresponde al mensaje raiz del hilo
         padre_raiz = padre_del_padre.parentNode.parentNode.parentNode;
 
-        // si es el mensaje raiz se inserta más a la derecha para que aparezca a la derecha de "+1 -1" y a la izquierda de "responder"
-        if (padre_raiz.className.search("raiz") > 0) {
-            // se debe considerar que los foros de comunidad e institucional tienen tag "+1 -1" mientras que el de cursos no.
-            padre_del_padre.insertBefore(li,padre_del_padre.childNodes[padre_del_padre.childNodes.length-6]);
+        /** 
+            si es el mensaje raiz y tiene el tag <li> de "+1 -1" 
+            se considera que los foros de comunidad e institucional tienen tag "+1 -1" mientras que el de cursos no.
+        */
+        if (padre_raiz.className.search("raiz") > 0 && padre_del_padre.getElementsByClassName("adhesion").length > 0) {
+            padre_del_padre.insertBefore(li,padre_del_padre.children[2]);
         } else {
-            // debe ser fijo puesto que la cantidad de enlaces que tienen los hijos de un mensaje raíz es variable (puede tener enlace padre)
-            padre_del_padre.insertBefore(li,padre_del_padre.childNodes[1]);
+            padre_del_padre.insertBefore(li,padre_del_padre.children[1]);
         }
     });    
 }
