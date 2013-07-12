@@ -12,7 +12,8 @@ Para el futuro
 
 cosas por hacer:
 
-1. Embellecer los formularios para eliminar y comentar una marca.
+1. Aumentar cantidad máxima de links.
+2. Embellecer los formularios para eliminar y comentar una marca.
 
 Si tienes alguna sugerencia enviame un correo cephei.1313@gmail.com :-)
 
