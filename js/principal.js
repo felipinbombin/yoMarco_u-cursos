@@ -9,6 +9,10 @@ _gaq.push(['_trackPageview']);
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 
+function seguir_boton(e) {
+	_gaq.push(['_trackEvent', e.target.className, 'clicked']);
+}
+
 /** 
 	una vez que se termina de cargar la pagina se ejecuta la función 
 */
@@ -216,7 +220,9 @@ function cargar_marcas(){
 			nodo_a_titulo = document.createElement("a");
 			nodo_a_titulo.setAttribute("href", marcas[i].link);
 			nodo_a_titulo.setAttribute("target", "_blank");
+			nodo_a_titulo.setAttribute("class", "Titulo");
 			nodo_a_titulo.appendChild(document.createTextNode(marcas[i].titulo));
+			nodo_a_titulo.addEventListener("click", seguir_boton);
 
 			nodo_h1_comentario = document.createElement("h1");
 			nodo_h1_span_comentario = document.createElement("span");
@@ -228,21 +234,19 @@ function cargar_marcas(){
 			nodo_a_eliminar = document.createElement("a");
 			nodo_a_eliminar.setAttribute("href", "#");
 			nodo_a_eliminar.setAttribute("id", i);
+			nodo_a_eliminar.setAttribute("class", "Eliminar");			
 			nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
-			nodo_a_eliminar.addEventListener("click", function() {
-				if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
-					eliminar_marca(this.id)
-				}
-			});
+			nodo_a_eliminar.addEventListener("click", seguir_boton);
+			nodo_a_eliminar.addEventListener("click", eliminar_marca);
 			
 			nodo_a_comentario = document.createElement("a");
 			nodo_a_comentario.setAttribute("href", "#");
 			nodo_a_comentario.setAttribute("id", i);
+			nodo_a_comentario.setAttribute("class", "Comentar");
 			nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
-			nodo_a_comentario.addEventListener("click", function() {
-				editar_comentario(this.id);
-			});
-
+			nodo_a_comentario.addEventListener("click", seguir_boton);
+			nodo_a_comentario.addEventListener("click", editar_comentario);
+			
 			nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
 			nodo_h1_titulo.appendChild(nodo_a_titulo);
 			nodo_td_titulo_fecha.appendChild(nodo_h1_titulo);
@@ -266,17 +270,17 @@ function refrescar_vista() {
 	cargar_marcas();
 }
 
-function editar_comentario(id) {
+function editar_comentario(e) {
 	chrome.storage.sync.get("marcas", function(almacen_json) {
 		var marcas = almacen_json.marcas;
 		
-		var comentario = prompt("comenta la marca:", marcas[id].comentario);
+		var comentario = prompt("comenta la marca:", marcas[e.target.id].comentario);
 
 		if (comentario != null)
 			if (comentario.length > 50) {
 				alert("Tú comentario no puede exceder los 50 caracteres(" + comentario.length + ")");
 			} else {
-				marcas[id].comentario = comentario;
+				marcas[e.target.id].comentario = comentario;
 				// se actualizan los datos
 			    chrome.storage.sync.set({marcas: marcas}, function() {
 			        refrescar_vista();
@@ -285,16 +289,18 @@ function editar_comentario(id) {
 	});
 }
 
-function eliminar_marca(id) {
-	chrome.storage.sync.get("marcas", function(almacen_json) {
-		var marcas = almacen_json.marcas;
+function eliminar_marca(e) {
+	if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
+		chrome.storage.sync.get("marcas", function(almacen_json) {
+			var marcas = almacen_json.marcas;
 
-		// se elimina la marca específicada por el id
-		marcas.splice(id, 1);
+			// se elimina la marca específicada por el id
+			marcas.splice(e.target.id, 1);
 
-		// se actualizan los datos
-	    chrome.storage.sync.set({marcas: marcas}, function() {
-	        refrescar_vista();
-	    });
-	});	
+			// se actualizan los datos
+		    chrome.storage.sync.set({marcas: marcas}, function() {
+		        refrescar_vista();
+		    });
+		});	
+	}
 }
