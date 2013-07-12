@@ -1,7 +1,7 @@
 yoMarco u-cursos
 ================
 
-yoMarco u-cursos es una extensión para el navegador web google chrome. Esta agrega un link en los mensajes del foro de www.u-cursos.cl que permite guardar el permalink automáticamente y permite acceder a ellos de manera muy simple.
+yoMarco u-cursos es una extensión para el navegador web google chrome. Esta agrega un link en los mensajes del foro de www.u-cursos.cl que permite guardar el permalink automáticamente y provee una manera simple e intuitiva para acceder a ellos.
 
 Mas detalles
 ------------
