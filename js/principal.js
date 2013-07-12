@@ -18,8 +18,8 @@ function seguir_boton(e) {
 */
 document.addEventListener('DOMContentLoaded', function () {
 
-	document.getElementById("ver_repositorio").addEventListener("click",seguir_boton);
-	document.getElementById("ver_documentacion").addEventListener("click",seguir_boton);
+	document.getElementById("link_repositorio").addEventListener("click",seguir_boton);
+	document.getElementById("link_documentacion").addEventListener("click",seguir_boton);
 
 	// Configuración de moment.js a español
 	moment.lang('es', {
