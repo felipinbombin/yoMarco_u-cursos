@@ -18,6 +18,9 @@ function seguir_boton(e) {
 */
 document.addEventListener('DOMContentLoaded', function () {
 
+	document.getElementById("ver_repositorio").addEventListener("click",seguir_boton);
+	document.getElementById("ver_documentacion").addEventListener("click",seguir_boton);
+
 	// Configuración de moment.js a español
 	moment.lang('es', {
 	    months : "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split("_"),
