@@ -99,9 +99,9 @@ function agregar_link(permalink) {
             Si ya esta registrado se anota como 'marcado' y no se le asocia un evento click
         */
         if (existe_marca)
-            texto = document.createTextNode("marcado");    
+            texto = document.createTextNode("Marcado");    
         else {
-            texto = document.createTextNode("marcar"); 
+            texto = document.createTextNode("Marcar"); 
             link_marcar.addEventListener('click', function(){
                 //tag a que contiene el texto "marcar"
                 var ref_etiqueta = this.childNodes[0];
