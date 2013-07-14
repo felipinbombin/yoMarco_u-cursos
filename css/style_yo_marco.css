@@ -10,7 +10,7 @@ h2.yo_marco {
 body {
 	min-width: 700px;
 	background-color: white;
-	overflow: hidden;
+	overflow-x: visible;
 }
 
 #creditos {
