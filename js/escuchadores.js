@@ -4,23 +4,11 @@
 */
 chrome.storage.onChanged.addListener(function(changes, namespace) {
     console.log("Se actualiza el badge.");
-
+    
     for(marcas in changes){
         if (typeof marcas != "undefined") {
-            // si se agregó una marca = +1:
-            // si se eliminó una marca = -1;
-            var dif = changes[marcas].newValue.length - changes[marcas].oldValue.length;
-
-            chrome.browserAction.getBadgeText({} ,function(texto_actual){
-                var cadena;
-                if (texto_actual === "")
-                    cadena = dif.toString();
-                else
-                    cadena = (parseInt(texto_actual)+dif).toString();
-                
-                chrome.browserAction.setBadgeText({text: cadena});
-            });
-
+            var dif = (parseInt(marcas.charAt(marcas.length-1)))* 19 + changes[marcas].newValue.length;
+            chrome.browserAction.setBadgeText({text: dif.toString()});
             break;
         }
     }
@@ -40,7 +28,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 limitación de chrome.storage.sync
             */
             chrome.storage.sync.set(
-                    {marcas1: [],
+                    {marcas0: [],
+                     marcas1: [],
                      marcas2: [],
                      marcas3: [],
                      marcas4: [],
@@ -48,8 +37,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
                      marcas6: [],
                      marcas7: [],
                      marcas8: [],
-                     marcas9: [],
-                     marcas10: [],}, 
+                     marcas9: [],}, 
                 function() {
                     console.log('creado arreglos base.');
             });

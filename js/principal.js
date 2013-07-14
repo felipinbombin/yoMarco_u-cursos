@@ -122,20 +122,23 @@ document.addEventListener('DOMContentLoaded', function () {
 */
 function cargar_marcas(){
 	
-	chrome.storage.sync.get("marcas", function(almacen_json) {
+	chrome.storage.sync.get(null, function(almacen_json) {
         
         var marcas;
+        var hay_marcas = false;
 
-        // si no hay nada almacenado, se crea un arreglo de marcas
-        if (!almacen_json.hasOwnProperty("marcas"))
-            marcas = [];
-        else
-        	marcas = almacen_json.marcas;
+        // Busca si hay marcas para mostrar
+        for(marcas in almacen_json){
+            if (typeof marcas != "undefined" && almacen_json[marcas].length > 0) {
+                hay_marcas = true;
+                break;
+            }
+        }
 
 		var div = document.getElementById("lista_marcas");
 
 		// si no hay nada almacenado se detiene
-		if (marcas.length === 0){
+		if (!hay_marcas){
 			var nodo_ayuda_texto = document.createTextNode("no has marcado ningún tema aún.");
 			var div_ayuda = document.createElement("div");
 
@@ -202,67 +205,69 @@ function cargar_marcas(){
 		var nodo_a_eliminar = null;
 		var nodo_a_comentario = null;
 
-		for(var i=marcas.length-1; 0<=i;i--) {
-			
-			nodo_tr = document.createElement("tr");
-			nodo_tr.setAttribute("class", "odd");
+		for(marcas in almacen_json){
+			for(var i=almacen_json[marcas].length-1; 0<=i;i--) {
+				
+				nodo_tr = document.createElement("tr");
+				nodo_tr.setAttribute("class", "odd");
 
-			nodo_td_titulo_fecha = document.createElement("td");
-			nodo_td_titulo_fecha.setAttribute("class", "string");
-			nodo_td_comentario_url = document.createElement("td");
-			nodo_td_comentario_url.setAttribute("class", "number");
-			nodo_td_eliminar = document.createElement("td");
-			nodo_td_eliminar.setAttribute("class", "opciones");
-			nodo_td_comentar = document.createElement("td");
-			nodo_td_comentar.setAttribute("class", "opciones");
+				nodo_td_titulo_fecha = document.createElement("td");
+				nodo_td_titulo_fecha.setAttribute("class", "string");
+				nodo_td_comentario_url = document.createElement("td");
+				nodo_td_comentario_url.setAttribute("class", "number");
+				nodo_td_eliminar = document.createElement("td");
+				nodo_td_eliminar.setAttribute("class", "opciones");
+				nodo_td_comentar = document.createElement("td");
+				nodo_td_comentar.setAttribute("class", "opciones");
 
-			nodo_h1_titulo = document.createElement("h1");
-			nodo_h2_fecha = document.createElement("h2");
-			nodo_h2_fecha.appendChild(document.createTextNode(moment(marcas[i].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
+				nodo_h1_titulo = document.createElement("h1");
+				nodo_h2_fecha = document.createElement("h2");
+				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[marcas][i].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
 
-			nodo_a_titulo = document.createElement("a");
-			nodo_a_titulo.setAttribute("href", marcas[i].link);
-			nodo_a_titulo.setAttribute("target", "_blank");
-			nodo_a_titulo.setAttribute("class", "Titulo");
-			nodo_a_titulo.appendChild(document.createTextNode(marcas[i].titulo));
-			nodo_a_titulo.addEventListener("click", seguir_boton);
+				nodo_a_titulo = document.createElement("a");
+				nodo_a_titulo.setAttribute("href", almacen_json[marcas][i].link);
+				nodo_a_titulo.setAttribute("target", "_blank");
+				nodo_a_titulo.setAttribute("class", "Titulo");
+				nodo_a_titulo.appendChild(document.createTextNode(almacen_json[marcas][i].titulo));
+				nodo_a_titulo.addEventListener("click", seguir_boton);
 
-			nodo_h1_comentario = document.createElement("h1");
-			nodo_h1_span_comentario = document.createElement("span");
-			nodo_h1_span_comentario.appendChild(document.createTextNode(marcas[i].comentario)); 
+				nodo_h1_comentario = document.createElement("h1");
+				nodo_h1_span_comentario = document.createElement("span");
+				nodo_h1_span_comentario.appendChild(document.createTextNode(almacen_json[marcas][i].comentario)); 
 
-			nodo_h1_url = document.createElement("h2");
-			nodo_h1_url.appendChild(document.createTextNode(marcas[i].link));
+				nodo_h1_url = document.createElement("h2");
+				nodo_h1_url.appendChild(document.createTextNode(almacen_json[marcas][i].link));
 
-			nodo_a_eliminar = document.createElement("a");
-			nodo_a_eliminar.setAttribute("href", "#");
-			nodo_a_eliminar.setAttribute("id", i);
-			nodo_a_eliminar.setAttribute("class", "Eliminar");			
-			nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
-			nodo_a_eliminar.addEventListener("click", seguir_boton);
-			nodo_a_eliminar.addEventListener("click", eliminar_marca);
-			
-			nodo_a_comentario = document.createElement("a");
-			nodo_a_comentario.setAttribute("href", "#");
-			nodo_a_comentario.setAttribute("id", i);
-			nodo_a_comentario.setAttribute("class", "Comentar");
-			nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
-			nodo_a_comentario.addEventListener("click", seguir_boton);
-			nodo_a_comentario.addEventListener("click", editar_comentario);
-			
-			nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
-			nodo_h1_titulo.appendChild(nodo_a_titulo);
-			nodo_td_titulo_fecha.appendChild(nodo_h1_titulo);
-			nodo_td_titulo_fecha.appendChild(nodo_h2_fecha);
-			nodo_td_comentario_url.appendChild(nodo_h1_comentario);
-			nodo_td_comentario_url.appendChild(nodo_h1_url);		
-			nodo_td_eliminar.appendChild(nodo_a_eliminar);
-			nodo_td_comentar.appendChild(nodo_a_comentario);
-			nodo_tr.appendChild(nodo_td_titulo_fecha);
-			nodo_tr.appendChild(nodo_td_comentario_url);
-			nodo_tr.appendChild(nodo_td_eliminar);
-			nodo_tr.appendChild(nodo_td_comentar);
-			nodo_tbody.appendChild(nodo_tr);
+				nodo_a_eliminar = document.createElement("a");
+				nodo_a_eliminar.setAttribute("href", "#");
+				nodo_a_eliminar.setAttribute("id", i);
+				nodo_a_eliminar.setAttribute("class", "Eliminar");			
+				nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
+				nodo_a_eliminar.addEventListener("click", seguir_boton);
+				nodo_a_eliminar.addEventListener("click", eliminar_marca);
+				
+				nodo_a_comentario = document.createElement("a");
+				nodo_a_comentario.setAttribute("href", "#");
+				nodo_a_comentario.setAttribute("id", i);
+				nodo_a_comentario.setAttribute("class", "Comentar");
+				nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
+				nodo_a_comentario.addEventListener("click", seguir_boton);
+				nodo_a_comentario.addEventListener("click", editar_comentario);
+				
+				nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
+				nodo_h1_titulo.appendChild(nodo_a_titulo);
+				nodo_td_titulo_fecha.appendChild(nodo_h1_titulo);
+				nodo_td_titulo_fecha.appendChild(nodo_h2_fecha);
+				nodo_td_comentario_url.appendChild(nodo_h1_comentario);
+				nodo_td_comentario_url.appendChild(nodo_h1_url);		
+				nodo_td_eliminar.appendChild(nodo_a_eliminar);
+				nodo_td_comentar.appendChild(nodo_a_comentario);
+				nodo_tr.appendChild(nodo_td_titulo_fecha);
+				nodo_tr.appendChild(nodo_td_comentario_url);
+				nodo_tr.appendChild(nodo_td_eliminar);
+				nodo_tr.appendChild(nodo_td_comentar);
+				nodo_tbody.appendChild(nodo_tr);
+			}
 		}
 	});
 }
