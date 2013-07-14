@@ -240,7 +240,7 @@ function cargar_marcas(){
 
 				nodo_a_eliminar = document.createElement("a");
 				nodo_a_eliminar.setAttribute("href", "#");
-				nodo_a_eliminar.setAttribute("id", i);
+				nodo_a_eliminar.setAttribute("id", marcas + "-" + i);
 				nodo_a_eliminar.setAttribute("class", "Eliminar");			
 				nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
 				nodo_a_eliminar.addEventListener("click", seguir_boton);
@@ -248,7 +248,7 @@ function cargar_marcas(){
 				
 				nodo_a_comentario = document.createElement("a");
 				nodo_a_comentario.setAttribute("href", "#");
-				nodo_a_comentario.setAttribute("id", i);
+				nodo_a_comentario.setAttribute("id", marcas + "-" + i);
 				nodo_a_comentario.setAttribute("class", "Comentar");
 				nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
 				nodo_a_comentario.addEventListener("click", seguir_boton);
@@ -279,34 +279,48 @@ function refrescar_vista() {
 }
 
 function editar_comentario(e) {
-	chrome.storage.sync.get("marcas", function(almacen_json) {
-		var marcas = almacen_json.marcas;
-		
-		var comentario = prompt("comenta la marca:", marcas[e.target.id].comentario);
+	var arr_id = e.target.id.split("-");
+	
+	var registro = arr_id[0];
+	var id = arr_id[1];
 
-		if (comentario != null)
-			if (comentario.length > 50) {
-				alert("Tú comentario no puede exceder los 50 caracteres(" + comentario.length + ")");
-			} else {
-				marcas[e.target.id].comentario = comentario;
-				// se actualizan los datos
-			    chrome.storage.sync.set({marcas: marcas}, function() {
-			        refrescar_vista();
-			    });
+	chrome.storage.sync.get(null, function(almacen_json) {
+		for (marcas in almacen_json) {
+			if (marcas === registro) {
+				var comentario = prompt("comenta la marca:", almacen_json[marcas][id].comentario);
+
+				if (comentario != null)
+					if (comentario.length > 50) {
+						alert("Tú comentario no puede exceder los 50 caracteres(" + comentario.length + ")");
+					} else {
+						almacen_json[marcas][id].comentario = comentario;
+						// se actualizan los datos
+					    chrome.storage.sync.set(almacen_json, function() {
+					        refrescar_vista();
+					    });
+					}
 			}
+		}
 	});
 }
 
 function eliminar_marca(e) {
-	if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
-		chrome.storage.sync.get("marcas", function(almacen_json) {
-			var marcas = almacen_json.marcas;
+	var arr_id = e.target.id.split("-");
+	
+	var registro = arr_id[0];
+	var id = arr_id[1];
 
-			// se elimina la marca específicada por el id
-			marcas.splice(e.target.id, 1);
+	if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
+		chrome.storage.sync.get(null, function(almacen_json) {
+			for (marcas in almacen_json) {
+				if (marcas === registro) {
+					// se elimina la marca específicada por el id
+					almacen_json[marcas].splice(id, 1);		
+				}
+			}			
 
 			// se actualizan los datos
-		    chrome.storage.sync.set({marcas: marcas}, function() {
+		    chrome.storage.sync.set(almacen_json, function() {
 		        refrescar_vista();
 		    });
 		});	
