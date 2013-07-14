@@ -97,16 +97,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		} else if (json_marcas.style.display == "none" || json_marcas.style.display == "" ) {
 
 			var ref_toggle_json = this;
-			chrome.storage.sync.get("marcas", function(almacen_json) {
-				var marcas;
-				// si no hay nada almacenado, se crea un arreglo de marcas
-		        if (!almacen_json.hasOwnProperty("marcas"))
-		            marcas = [];
-		        else
-		        	marcas = almacen_json.marcas;
-		        
+			chrome.storage.sync.get(null, function(almacen_json) {
+
 				json_marcas.innerHTML = "";
-				json_marcas.appendChild(document.createTextNode(JSON.stringify(marcas)));
+				json_marcas.appendChild(document.createTextNode(JSON.stringify(almacen_json)));
 				json_marcas.style.display = "block";
 
 				ref_toggle_json.appendChild(document.createTextNode("<Ocultar json"));
@@ -299,7 +293,7 @@ function editar_comentario(e) {
 						// se actualizan los datos
 					    chrome.storage.sync.set(almacen_json, function() {
 					    	var com = document.getElementById("comentario-" + e.target.id);
-					    	com.nodeChild[0].nodeValue = comentario;
+					    	com.childNodes[0].nodeValue = comentario;
 					    });
 					}
 			}
@@ -324,7 +318,8 @@ function eliminar_marca(e) {
 
 			// se actualizan los datos
 		    chrome.storage.sync.set(almacen_json, function() {
-		    	ver file = document.getElementById("fila-" + e.target.id);
+		    	var fila = document.getElementById("fila-" + e.target.id);
+		    	fila.parentNode.removeChild(fila);
 		    });
 		});	
 	}
