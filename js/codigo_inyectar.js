@@ -28,7 +28,7 @@ function encontrar_raiz(tag) {
 }
 
 /**
-    A cada titulo se le asocia un evento clic.
+    A cada titulo se le asocia un evento click.
 */
 function agregar_evento_click_a_titulos() {
     var titulos = document.getElementsByClassName("raiz");
@@ -36,7 +36,7 @@ function agregar_evento_click_a_titulos() {
     for(var i = 0; i < titulos.length; i++) {
         var titulo = titulos[i];
 
-        // tag '<a>' que contiene el titulo y lo hace cliceable
+        // tag '<a>' que contiene el titulo y lo hace cliqueable
         var tagA = titulo.childNodes[1].childNodes[2];
         tagA.addEventListener("click", function(){
             var ref_titulo = this.parentNode.parentNode;
@@ -51,19 +51,20 @@ function agregar_evento_click_a_titulos() {
 /**
     Carga el link en cada mensaje hijo del tema que permite marcar un post
 */
-function agregar_links(titulo) {
-    var hijos = titulo.getElementsByClassName("permalink");
+function agregar_links(nodo_titulo) {
+    var hijos = nodo_titulo.getElementsByClassName("permalink");
 
     for(var i=0; i<hijos.length; i++) {
         //<ul>
-        var tagUl = hijos[i].parentNode.parentNode;
+        var tag_ul = hijos[i].parentNode.parentNode;
         
-        if (tagUl.getElementsByClassName("yo_marco").length == 0)
+        // si no existe el link 'Marcar' se agrega
+        if (tag_ul.getElementsByClassName("yo_marco").length == 0)
             agregar_link(hijos[i]);
     }
 }
 
-/*
+/**
     Agrega un link llamado "Marcar" en la sección donde aparecen 
     los links "responder, padre, permalink, etc" de cada mensaje de 
     un foro de u-cursos (cualquiera).
@@ -71,18 +72,21 @@ function agregar_links(titulo) {
 function agregar_link(permalink) {
 
     /**
-        consulta si el link ya esta marcado (existe en la extensión 'yo_marco!!!').
+        consulta si el link ya esta marcado (existe en la extensión 'yoMarco u-cursos').
+        Parámetro null retorna todo lo almacenado en storage. Se utilizan 10 items para almacenar a lo menos 180 links.
     */
-    chrome.storage.sync.get("marcas", function(almacen_json) {
+    chrome.storage.sync.get(null, function(almacen_json) {
 
         var existe_marca = false;
 
-        // si no hay nada almacenado o el largo del arreglo de marcas es 0 => el link no existe
-        if (typeof almacen_json.marcas != "undefined" && almacen_json.marcas != 0) {
-            for(var i=0;i<almacen_json.marcas.length;i++){
-                if (almacen_json.marcas[i].link === permalink.href) {
-                    existe_marca = true;
-                    break;
+        // se recorren todos los json que almacenan marcas. Esto se hace por la limitacion de chrome.storage.sync
+        for(marcas in almacen_json){
+            if (typeof marcas != "undefined") {
+                for(var i=0;i<almacen_json[marcas].length;i++){
+                    if (almacen_json[marcas][i].link === permalink.href) {
+                        existe_marca = true;
+                        break;
+                    }
                 }
             }
         }
@@ -107,20 +111,26 @@ function agregar_link(permalink) {
                 var ref_etiqueta = this.childNodes[0];
                 var ref_link = this.href;
 
-                // se recupera el arreglo de marcas y se agrega la nueva.
-                chrome.storage.sync.get("marcas", function(almacen_json) {
-                    // si no hay nada almacenado, se crea un arreglo de marcas
-                    if (typeof almacen_json.marcas === "undefined")
-                        almacen_json.marcas = [];
+                // se recupera los datos almacenados y se busca un espacio donde guardarlo.
+                chrome.storage.sync.get(null, function(almacen_json) {
                     
-                    // se agrega una marca al arreglo de marcas
-                    almacen_json.marcas.push({link: ref_link, titulo: titulo_texto, fecha_ingreso: fecha_ahora_con_formato(), comentario: ""});
+                    for(marcas in almacen_json){
+                        // cada item puede almacenar 19 marcas como máximo. Limitación técnica de chrome.storage.sync
+                        if (typeof marcas != "undefined" && almacen_json[marcas].length < 19) {
+                            // se agrega una marca al arreglo de marcas
+                            almacen_json[marcas].push({
+                                link: ref_link, 
+                                titulo: titulo_texto, 
+                                fecha_ingreso: fecha_ahora_con_formato(), 
+                                comentario: ""});
 
-                    // se actualizan los datos
-                    chrome.storage.sync.set({marcas: almacen_json.marcas}, function() {
-                        ref_etiqueta.nodeValue = "marcado";
-                    });
-
+                            // se actualizan los datos
+                            chrome.storage.sync.set(almacen_json, function() {
+                                ref_etiqueta.nodeValue = "Marcado";
+                            });
+                            break;
+                        }
+                    }
                 });
             });
             link_marcar.setAttribute("href", permalink.href);

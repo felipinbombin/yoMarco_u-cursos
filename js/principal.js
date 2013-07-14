@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			chrome.storage.sync.get("marcas", function(almacen_json) {
 				var marcas;
 				// si no hay nada almacenado, se crea un arreglo de marcas
-		        if (typeof almacen_json.marcas === "undefined")
+		        if (!almacen_json.hasOwnProperty("marcas"))
 		            marcas = [];
 		        else
 		        	marcas = almacen_json.marcas;
@@ -127,7 +127,7 @@ function cargar_marcas(){
         var marcas;
 
         // si no hay nada almacenado, se crea un arreglo de marcas
-        if (typeof almacen_json.marcas === "undefined")
+        if (!almacen_json.hasOwnProperty("marcas"))
             marcas = [];
         else
         	marcas = almacen_json.marcas;
