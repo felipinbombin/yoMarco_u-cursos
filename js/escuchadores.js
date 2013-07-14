@@ -7,8 +7,17 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     
     for(marcas in changes){
         if (typeof marcas != "undefined") {
-            var dif = (parseInt(marcas.charAt(marcas.length-1)))* 19 + changes[marcas].newValue.length;
-            chrome.browserAction.setBadgeText({text: dif.toString()});
+            var dif = 0;
+            chrome.storage.sync.get(null, function(almacen_json) {
+                for(c_marcas in almacen_json){
+                    if(c_marcas === marcas) 
+                        dif += changes[marcas].newValue.length;
+                    else
+                        dif += almacen_json[c_marcas].length;
+                }
+
+                chrome.browserAction.setBadgeText({text: dif.toString()});
+            });
             break;
         }
     }
