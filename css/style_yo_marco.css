@@ -38,5 +38,9 @@ body {
 }
 
 div.botones {
-	margin: 10px 0;
+	margin: 10px 10px;
+}
+
+.cancelar {
+	margin-left: 5px !important;
 }

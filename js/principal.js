@@ -14,10 +14,11 @@ function seguir_boton(e) {
 }
 
 /** 
-	una vez que se termina de cargar la pagina se ejecuta la función 
+	una vez que se termina de cargar la pagina www.u-cursos.cl se ejecuta la función 
 */
 document.addEventListener('DOMContentLoaded', function () {
 
+	// seguimiento a los link de repositorio y documentación
 	document.getElementById("link_repositorio").addEventListener("click",seguir_boton);
 	document.getElementById("link_documentacion").addEventListener("click",seguir_boton);
 
@@ -118,12 +119,11 @@ function cargar_marcas(){
 	
 	chrome.storage.sync.get(null, function(almacen_json) {
         
-        var marcas;
         var hay_marcas = false;
 
         // Busca si hay marcas para mostrar
-        for(marcas in almacen_json){
-            if (typeof marcas != "undefined" && almacen_json[marcas].length > 0) {
+        for(registro in almacen_json){
+            if (almacen_json[registro].length > 0) {
                 hay_marcas = true;
                 break;
             }
@@ -133,12 +133,11 @@ function cargar_marcas(){
 
 		// si no hay nada almacenado se detiene
 		if (!hay_marcas){
-			var nodo_ayuda_texto = document.createTextNode("no has marcado ningún tema aún.");
-			var div_ayuda = document.createElement("div");
+			var div_sin_marcas = document.createElement("div");
 
-			div_ayuda.setAttribute("class","ayuda");
-			div_ayuda.appendChild(nodo_ayuda_texto);
-			div.appendChild(div_ayuda);
+			div_sin_marcas.setAttribute("class","ayuda");
+			div_sin_marcas.appendChild(document.createTextNode("no has marcado ningún tema aún."));
+			div.appendChild(div_sin_marcas);
 
 			return;
 		}
@@ -199,11 +198,12 @@ function cargar_marcas(){
 		var nodo_a_eliminar = null;
 		var nodo_a_comentario = null;
 
-		for(marcas in almacen_json){
-			for(var i=almacen_json[marcas].length-1; 0<=i;i--) {
+		for(registro in almacen_json){
+			for(var id=almacen_json[registro].length - 1; 0<=id; id--) {
 				
+				// cada fila de la tabla tiene id='fila-registro-id'
 				nodo_tr = document.createElement("tr");
-				nodo_tr.setAttribute("id", "fila-" + marcas + "-" + i);
+				nodo_tr.setAttribute("id", "fila-" + registro + "-" + id);
 				nodo_tr.setAttribute("class", "odd");
 
 				nodo_td_titulo_fecha = document.createElement("td");
@@ -217,34 +217,37 @@ function cargar_marcas(){
 
 				nodo_h1_titulo = document.createElement("h1");
 				nodo_h2_fecha = document.createElement("h2");
-				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[marcas][i].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
+				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[registro][id].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
 
 				nodo_a_titulo = document.createElement("a");
-				nodo_a_titulo.setAttribute("href", almacen_json[marcas][i].link);
+				nodo_a_titulo.setAttribute("href", almacen_json[registro][id].link);
 				nodo_a_titulo.setAttribute("target", "_blank");
 				nodo_a_titulo.setAttribute("class", "Titulo");
-				nodo_a_titulo.appendChild(document.createTextNode(almacen_json[marcas][i].titulo));
+				nodo_a_titulo.appendChild(document.createTextNode(almacen_json[registro][id].titulo));
 				nodo_a_titulo.addEventListener("click", seguir_boton);
 
 				nodo_h1_comentario = document.createElement("h1");
+				// cada tag donde va el comentario tiene id='comentario-registro-id'
 				nodo_h1_span_comentario = document.createElement("span");
-				nodo_h1_span_comentario.setAttribute("id", "comentario-" + marcas + "-" + i);
-				nodo_h1_span_comentario.appendChild(document.createTextNode(almacen_json[marcas][i].comentario)); 
+				nodo_h1_span_comentario.setAttribute("id", "comentario-" + registro + "-" + id);
+				nodo_h1_span_comentario.appendChild(document.createTextNode(almacen_json[registro][id].comentario)); 
 
 				nodo_h1_url = document.createElement("h2");
-				nodo_h1_url.appendChild(document.createTextNode(almacen_json[marcas][i].link));
+				nodo_h1_url.appendChild(document.createTextNode(almacen_json[registro][id].link));
 
+				// cada tag donde va el link que elimina una marca tiene id='eliminar-registro-id'
 				nodo_a_eliminar = document.createElement("a");
 				nodo_a_eliminar.setAttribute("href", "#");
-				nodo_a_eliminar.setAttribute("id", marcas + "-" + i);
+				nodo_a_eliminar.setAttribute("id", "eliminar-" + registro + "-" + id);
 				nodo_a_eliminar.setAttribute("class", "Eliminar");
 				nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
 				nodo_a_eliminar.addEventListener("click", seguir_boton);
 				nodo_a_eliminar.addEventListener("click", eliminar_marca);
 				
+				// cada tag donde va el link que comenta una marca tiene id='comentar-registro-id'
 				nodo_a_comentario = document.createElement("a");
 				nodo_a_comentario.setAttribute("href", "#");
-				nodo_a_comentario.setAttribute("id", marcas + "-" + i);
+				nodo_a_comentario.setAttribute("id", "comentar-" + registro + "-" + id);
 				nodo_a_comentario.setAttribute("class", "Comentar");
 				nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
 				nodo_a_comentario.addEventListener("click", seguir_boton);
@@ -268,18 +271,33 @@ function cargar_marcas(){
 	});
 }
 
+/**
+	Función que se ejecuta cuando se hace click en el link 'comentar' de una marca
+*/
 function comentar(e) {
-	// se elimina el cuadro comentar (si hay uno mostrandose)
+	var fila_marca = e.target.parentNode.parentNode;
 	var fila_comentario = document.getElementById("fila_comentario");
-	if (fila_comentario != null)
+
+	/**
+		Si no hay un form comentar, se agrega, de lo contrario se revisa si el existente
+		es para la misma marca, si es así, no se hace nada, de lo contrario se elimina el existente y se agrega uno para la marca actual.
+	*/
+	if (fila_comentario === null)
+		abrir_comentario(fila_marca);
+	else if (fila_comentario.previousSibling != fila_marca) {
 		fila_comentario.parentNode.removeChild(fila_comentario);
-	
-	// se muestra el nuevo cuadro comentar
-	var tr_marca = e.target.parentNode.parentNode;
-	abrir_comentario(tr_marca);
+		abrir_comentario(fila_marca);		
+	}
 }
 
-function abrir_comentario(nodo_tr) {
+/**
+	Crea un formulario para escribir un comentario asociado a una marca
+*/
+function abrir_comentario(fila_marca) {
+
+	var arr_id_marca = fila_marca.id.split("-");
+	var nombre_registro = arr_id_marca[1];
+	var id_registro = arr_id_marca[2];
 
 	var tr_comentario = null;
 	var td_responder = null;
@@ -307,7 +325,10 @@ function abrir_comentario(nodo_tr) {
 	textarea.setAttribute("type", "text");
 	textarea.setAttribute("name", "comentario");
 	textarea.setAttribute("placeholder", "...");
-
+	chrome.storage.sync.get(nombre_registro, function(almacen_json) {
+		textarea.appendChild(document.createTextNode(almacen_json[nombre_registro][id_registro].comentario));
+	});
+	
 	div_botones = document.createElement("div");
 	div_botones.setAttribute("class", "botones");
 
@@ -316,14 +337,16 @@ function abrir_comentario(nodo_tr) {
 	input_grabar.setAttribute("name", "grabar");
 	input_grabar.setAttribute("value", "Grabar");
 	input_grabar.setAttribute("class", "boton");
+	input_grabar.setAttribute("id", "grabar-" + nombre_registro + "-" + id_registro);	
+	input_grabar.addEventListener("click", grabar_comentario);
 
 	input_cancelar = document.createElement("input");
 	input_cancelar.setAttribute("type", "button");
 	input_cancelar.setAttribute("name", "cancelar");
 	input_cancelar.setAttribute("value", "Cancelar");
-	input_cancelar.setAttribute("class", "boton");
+	input_cancelar.setAttribute("class", "boton cancelar");
+	input_cancelar.addEventListener("click", cerrar_form_comentar);
 
-	nodo_tr.parentNode.insertBefore(tr_comentario, nodo_tr.nextSibling);
 	tr_comentario.appendChild(td_responder);
 	td_responder.appendChild(form);
 	form.appendChild(div_textarea);
@@ -331,53 +354,62 @@ function abrir_comentario(nodo_tr) {
 	div_textarea.appendChild(textarea);
 	div_botones.appendChild(input_grabar);
 	div_botones.appendChild(input_cancelar);
+
+	// el form para comentar se inserta debajo de la marca asociada
+	fila_marca.parentNode.insertBefore(tr_comentario, fila_marca.nextSibling);
+
+	textarea.focus();
 }
 
-function editar_comentario(e) {
-	var arr_id = e.target.id.split("-");
-	
-	var registro = arr_id[0];
-	var id = arr_id[1];
+function cerrar_form_comentar() {
+	// tag <tr> del form para comentar
+	var tr_comentar = document.getElementById("fila_comentario");
+	if (tr_comentar != null)
+		tr_comentar.parentNode.removeChild(tr_comentar);
+}
 
-	chrome.storage.sync.get(null, function(almacen_json) {
-		for (marcas in almacen_json) {
-			if (marcas === registro) {
-				var comentario = prompt("comenta la marca:", almacen_json[marcas][id].comentario);
+function grabar_comentario(e) {
+	// tag <tr> de la marca asociada al comentario
+	var arr_fila = e.target.id.split("-");
+	var nombre_registro = arr_fila[1];
+	var id_registro = arr_fila[2];
 
-				if (comentario != null)
-					if (comentario.length > 50) {
-						alert("Tú comentario no puede exceder los 50 caracteres(" + comentario.length + ")");
-					} else {
-						almacen_json[marcas][id].comentario = comentario;
-						// se actualizan los datos
-					    chrome.storage.sync.set(almacen_json, function() {
-					    	var com = document.getElementById("comentario-" + e.target.id);
-					    	com.childNodes[0].nodeValue = comentario;
-					    });
-					}
-			}
+	// comentario ingresado en el textarea
+	var comentario = document.getElementsByTagName("textarea")[0].value;
+
+	if (comentario != null) {
+		if (comentario.length > 50) {
+			alert("Tú comentario no puede exceder los 50 caracteres(" + comentario.length + ")");
+		} else {
+			chrome.storage.sync.get(nombre_registro, function(almacen_json) {
+				almacen_json[nombre_registro][id_registro].comentario = comentario;
+				// se actualizan los datos
+			    chrome.storage.sync.set(almacen_json, function() {
+			    	// una vez guardado se cierra el form
+			    	cerrar_form_comentar(e);
+			    	var com = document.getElementById("comentario-" + nombre_registro + "-" + id_registro);
+			    	com.childNodes[0].nodeValue = comentario;
+			    });
+			});
 		}
-	});
+	}
 }
 
 function eliminar_marca(e) {
+
 	var arr_id = e.target.id.split("-");
 	
-	var registro = arr_id[0];
-	var id = arr_id[1];
+	var nombre_registro = arr_id[1];
+	var id_registro = arr_id[2];
 
 	if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
-		chrome.storage.sync.get(null, function(almacen_json) {
-			for (marcas in almacen_json) {
-				if (marcas === registro) {
-					// se elimina la marca específicada por el id
-					almacen_json[marcas].splice(id, 1);		
-				}
-			}			
-
+		chrome.storage.sync.get(nombre_registro, function(almacen_json) {
+			// se elimina la marca específicada por el id
+			almacen_json[nombre_registro].splice(id_registro, 1);		
+			
 			// se actualizan los datos
 		    chrome.storage.sync.set(almacen_json, function() {
-		    	var fila = document.getElementById("fila-" + e.target.id);
+		    	var fila = document.getElementById("fila-" + nombre_registro + "-" + id_registro);
 		    	fila.parentNode.removeChild(fila);
 		    });
 		});	
