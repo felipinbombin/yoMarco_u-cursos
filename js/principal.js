@@ -237,7 +237,7 @@ function cargar_marcas(){
 				nodo_a_eliminar = document.createElement("a");
 				nodo_a_eliminar.setAttribute("href", "#");
 				nodo_a_eliminar.setAttribute("id", marcas + "-" + i);
-				nodo_a_eliminar.setAttribute("class", "Eliminar");			
+				nodo_a_eliminar.setAttribute("class", "Eliminar");
 				nodo_a_eliminar.appendChild(document.createTextNode("Eliminar"));
 				nodo_a_eliminar.addEventListener("click", seguir_boton);
 				nodo_a_eliminar.addEventListener("click", eliminar_marca);
@@ -248,7 +248,7 @@ function cargar_marcas(){
 				nodo_a_comentario.setAttribute("class", "Comentar");
 				nodo_a_comentario.appendChild(document.createTextNode("Comentar"));
 				nodo_a_comentario.addEventListener("click", seguir_boton);
-				nodo_a_comentario.addEventListener("click", editar_comentario);
+				nodo_a_comentario.addEventListener("click", comentar);
 				
 				nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
 				nodo_h1_titulo.appendChild(nodo_a_titulo);
@@ -268,10 +268,69 @@ function cargar_marcas(){
 	});
 }
 
-function refrescar_vista() {
-	var div = document.getElementById("lista_marcas");
-	div.innerHTML = "";
-	cargar_marcas();
+function comentar(e) {
+	// se elimina el cuadro comentar (si hay uno mostrandose)
+	var fila_comentario = document.getElementById("fila_comentario");
+	if (fila_comentario != null)
+		fila_comentario.parentNode.removeChild(fila_comentario);
+	
+	// se muestra el nuevo cuadro comentar
+	var tr_marca = e.target.parentNode.parentNode;
+	abrir_comentario(tr_marca);
+}
+
+function abrir_comentario(nodo_tr) {
+
+	var tr_comentario = null;
+	var td_responder = null;
+	var form = null;
+	var div_textarea = null;
+	var textarea = null;
+	var div_botones = null;
+	var input_grabar = null;
+	var input_cancelar = null;
+
+	tr_comentario = document.createElement("tr");
+	tr_comentario.setAttribute("id", "fila_comentario");
+
+	td_responder = document.createElement("td");
+	td_responder.setAttribute("class", "responder");
+	td_responder.setAttribute("colspan", "4");
+
+	form = document.createElement("form");
+	form.setAttribute("accept-charset", "utf-8");
+
+	div_textarea = document.createElement("div");
+	div_textarea.setAttribute("class", "textarea");
+
+	textarea = document.createElement("textarea");
+	textarea.setAttribute("type", "text");
+	textarea.setAttribute("name", "comentario");
+	textarea.setAttribute("placeholder", "...");
+
+	div_botones = document.createElement("div");
+	div_botones.setAttribute("class", "botones");
+
+	input_grabar = document.createElement("input");
+	input_grabar.setAttribute("type", "button");
+	input_grabar.setAttribute("name", "grabar");
+	input_grabar.setAttribute("value", "Grabar");
+	input_grabar.setAttribute("class", "boton");
+
+	input_cancelar = document.createElement("input");
+	input_cancelar.setAttribute("type", "button");
+	input_cancelar.setAttribute("name", "cancelar");
+	input_cancelar.setAttribute("value", "Cancelar");
+	input_cancelar.setAttribute("class", "boton");
+
+	nodo_tr.parentNode.insertBefore(tr_comentario, nodo_tr.nextSibling);
+	tr_comentario.appendChild(td_responder);
+	td_responder.appendChild(form);
+	form.appendChild(div_textarea);
+	form.appendChild(div_botones);
+	div_textarea.appendChild(textarea);
+	div_botones.appendChild(input_grabar);
+	div_botones.appendChild(input_cancelar);
 }
 
 function editar_comentario(e) {
@@ -324,3 +383,11 @@ function eliminar_marca(e) {
 		});	
 	}
 }
+
+/*
+function refrescar_vista() {
+	var div = document.getElementById("lista_marcas");
+	div.innerHTML = "";
+	cargar_marcas();
+}
+*/
