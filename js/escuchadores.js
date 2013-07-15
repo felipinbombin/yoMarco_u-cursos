@@ -71,11 +71,14 @@ chrome.runtime.onInstalled.addListener(function(details) {
                             function() {
                                 console.log('creado arreglos base.');
                         }); 
+                        chrome.storage.sync.remove("marcas", function() {
+                                console.log("arreglo 'marcas' borrado.");
+                        }); 
+                        
                         break;
                     }
                 }
             });
-            console.log(details.previousVersion());
             break;
         case "chrome_update":
 

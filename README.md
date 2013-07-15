@@ -5,15 +5,7 @@ yoMarco u-cursos es una extensión para el navegador web google chrome. Esta agr
 
 Mas detalles
 ------------
-Si quieres saber de que se trata especificamente visita http://felipinbombin.github.io/yoMarco_u-cursos/
-
-Para el futuro
---------------
-
-cosas por hacer:
-
-1. Aumentar cantidad máxima de links.
-2. Embellecer los formularios para eliminar y comentar una marca.
+Si quieres saber de que se trata especificamente visita la documentación oficial http://felipinbombin.github.io/yoMarco_u-cursos/
 
 Si tienes alguna sugerencia enviame un correo cephei.1313@gmail.com :-)
 
