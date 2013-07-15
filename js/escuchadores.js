@@ -54,6 +54,27 @@ chrome.runtime.onInstalled.addListener(function(details) {
             chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
             break;
         case "update":
+            chrome.storage.sync.get(null, function(almacen_json) {
+                for(marcas in almacen_json){
+                    if(marcas === "marcas"){
+                        chrome.storage.sync.set(
+                                {marcas0: almacen_json.marcas,
+                                 marcas1: [],
+                                 marcas2: [],
+                                 marcas3: [],
+                                 marcas4: [],
+                                 marcas5: [],
+                                 marcas6: [],
+                                 marcas7: [],
+                                 marcas8: [],
+                                 marcas9: [],}, 
+                            function() {
+                                console.log('creado arreglos base.');
+                        }); 
+                        break;
+                    }
+                }
+            });
             console.log(details.previousVersion());
             break;
         case "chrome_update":
