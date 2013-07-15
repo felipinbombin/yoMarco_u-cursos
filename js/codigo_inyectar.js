@@ -72,7 +72,7 @@ function agregar_links(nodo_titulo) {
 function agregar_link(permalink) {
 
     /**
-        consulta si el link ya esta marcado (existe en la extensión 'yoMarco u-cursos').
+        Consulta si el link ya esta marcado (existe en la extensión 'yoMarco u-cursos').
         Parámetro null retorna todo lo almacenado en storage. Se utilizan 10 items para almacenar a lo menos 180 links.
     */
     chrome.storage.sync.get(null, function(almacen_json) {
@@ -116,7 +116,7 @@ function agregar_link(permalink) {
                     
                     for(marcas in almacen_json){
                         // cada item puede almacenar 19 marcas como máximo. Limitación técnica de chrome.storage.sync
-                        if (typeof marcas != "undefined" && almacen_json[marcas].length < 19) {
+                        if (almacen_json[marcas].length < 19) {
                             // se agrega una marca al arreglo de marcas
                             almacen_json[marcas].push({
                                 link: ref_link, 
