@@ -9,4 +9,10 @@ Si quieres saber de que se trata especificamente visita la documentación oficia
 
 Si tienes alguna sugerencia enviame un correo cephei.1313@gmail.com :-)
 
+Cambios futuros
+------------
+
+1. Detectar cuando un hilo tiene nuevos comentarios.
+2. Indicar la cantidad de nuevos comentarios.
+
 [![githalytics.com alpha](https://cruel-carlota.gopagoda.com/afdddbf6a0e6e1ce5073289e02ce6669 "githalytics.com")](http://githalytics.com/felipinbombin/yoMarco_u-cursos)
