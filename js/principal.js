@@ -13,6 +13,26 @@ function seguir_boton(e) {
 	_gaq.push(['_trackEvent', e.target.className, 'clicked']);
 }
 
+// Configuración para spin.js
+var opts = {
+  lines: 15, // The number of lines to draw
+  length: 2, // The length of each line
+  width: 4, // The line thickness
+  radius: 3, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 90, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb
+  speed: 1, // Rounds per second
+  trail: 68, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: true, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: 'auto' // Left position relative to parent in px
+};
+
 /** 
 	Una vez que se termina de cargar la pagina www.u-cursos.cl se ejecuta la función 
 */
@@ -192,6 +212,7 @@ function cargar_marcas(){
 		var nodo_h1_titulo = null;
 		var nodo_h2_fecha = null;
 		var nodo_a_titulo = null;
+		var nodo_div_cargar = null;
 		var nodo_h1_comentario = null;
 		var nodo_h1_span_comentario = null;
 		var nodo_h1_url = null;
@@ -216,6 +237,11 @@ function cargar_marcas(){
 				nodo_td_comentar.setAttribute("class", "opciones");
 
 				nodo_h1_titulo = document.createElement("h1");
+
+				nodo_div_cargar = document.createElement("div");
+				nodo_div_cargar.setAttribute("id", "cargar_info_tema");
+				actualizar_info_tema(nodo_div_cargar);
+
 				nodo_h2_fecha = document.createElement("h2");
 				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[registro][id].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
 
@@ -255,6 +281,7 @@ function cargar_marcas(){
 				
 				nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
 				nodo_h1_titulo.appendChild(nodo_a_titulo);
+				nodo_h1_titulo.appendChild(nodo_div_cargar);
 				nodo_td_titulo_fecha.appendChild(nodo_h1_titulo);
 				nodo_td_titulo_fecha.appendChild(nodo_h2_fecha);
 				nodo_td_comentario_url.appendChild(nodo_h1_comentario);
@@ -419,6 +446,16 @@ function eliminar_marca(e) {
 		    });
 		});	
 	}
+}
+
+/**
+	Llamada AJAX que revisa si el tema tiene nuevos mensajes, si es así destaca el titulo e imprime
+	la cantidad de mensajes nuevos a la derecha del titulo
+*/
+function actualizar_info_tema(tag_div) {
+
+	var spinner = new Spinner(opts).spin(tag_div);
+
 }
 
 /*
