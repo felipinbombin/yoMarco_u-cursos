@@ -1,4 +1,4 @@
-// configuración de googleAnalytics
+// Configuración de googleAnalytics
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-42211163-1']);
 _gaq.push(['_trackPageview']);
@@ -14,11 +14,11 @@ function seguir_boton(e) {
 }
 
 /** 
-	una vez que se termina de cargar la pagina www.u-cursos.cl se ejecuta la función 
+	Una vez que se termina de cargar la pagina www.u-cursos.cl se ejecuta la función 
 */
 document.addEventListener('DOMContentLoaded', function () {
 
-	// seguimiento a los link de repositorio y documentación
+	// Seguimiento a los link de repositorio y documentación
 	document.getElementById("link_repositorio").addEventListener("click",seguir_boton);
 	document.getElementById("link_documentacion").addEventListener("click",seguir_boton);
 
@@ -355,26 +355,26 @@ function abrir_comentario(fila_marca) {
 	div_botones.appendChild(input_grabar);
 	div_botones.appendChild(input_cancelar);
 
-	// el form para comentar se inserta debajo de la marca asociada
+	// El form para comentar se inserta debajo de la marca asociada
 	fila_marca.parentNode.insertBefore(tr_comentario, fila_marca.nextSibling);
 
 	textarea.focus();
 }
 
 function cerrar_form_comentar() {
-	// tag <tr> del form para comentar
+	// Tag <tr> del form para comentar
 	var tr_comentar = document.getElementById("fila_comentario");
 	if (tr_comentar != null)
 		tr_comentar.parentNode.removeChild(tr_comentar);
 }
 
 function grabar_comentario(e) {
-	// tag <tr> de la marca asociada al comentario
+	// Tag <tr> de la marca asociada al comentario
 	var arr_fila = e.target.id.split("-");
 	var nombre_registro = arr_fila[1];
 	var id_registro = arr_fila[2];
 
-	// comentario ingresado en el textarea
+	// Comentario ingresado en el textarea
 	var comentario = document.getElementsByTagName("textarea")[0].value;
 
 	if (comentario != null) {
@@ -404,12 +404,17 @@ function eliminar_marca(e) {
 
 	if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
 		chrome.storage.sync.get(nombre_registro, function(almacen_json) {
-			// se elimina la marca específicada por el id
+			// Se elimina la marca específicada por el id
 			almacen_json[nombre_registro].splice(id_registro, 1);		
 			
-			// se actualizan los datos
+			// Se actualizan los datos
 		    chrome.storage.sync.set(almacen_json, function() {
 		    	var fila = document.getElementById("fila-" + nombre_registro + "-" + id_registro);
+		    	
+		    	// Si la fila para comentar esta debajo de la fila a la eliminar -> se cierra.
+		    	if(fila.nextSibling.id == "fila_comentario")
+		    		cerrar_form_comentar();
+		    	// Se elimina la fila de la tabla que contiene la marca
 		    	fila.parentNode.removeChild(fila);
 		    });
 		});	
