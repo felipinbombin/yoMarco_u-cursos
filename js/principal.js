@@ -240,7 +240,8 @@ function cargar_marcas(){
 
 				nodo_div_cargar = document.createElement("div");
 				nodo_div_cargar.setAttribute("id", "cargar_info_tema");
-				actualizar_info_tema(nodo_div_cargar);
+				nodo_div_cargar.setAttribute("class", "ayuda");
+				actualizar_info_tema(nodo_div_cargar, almacen_json[registro][id].link);
 
 				nodo_h2_fecha = document.createElement("h2");
 				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[registro][id].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
@@ -452,9 +453,43 @@ function eliminar_marca(e) {
 	Llamada AJAX que revisa si el tema tiene nuevos mensajes, si es así destaca el titulo e imprime
 	la cantidad de mensajes nuevos a la derecha del titulo
 */
-function actualizar_info_tema(tag_div) {
+function actualizar_info_tema(tag_div, url) {
 
+	// aparece spin
 	var spinner = new Spinner(opts).spin(tag_div);
+	var xmlhttp;
+
+	if (window.XMLHttpRequest) {// código para IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+	} else {// código para IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	xmlhttp.onreadystatechange = function() {
+		// Si el servidor responde positivamente (sin errores = 200) y termino la llamada
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			spinner.stop();
+
+			// Obtiene de la cadena el string <body>...</body>
+			var string_html = xmlhttp.responseText;
+			var tag_body = string_html.substring(string_html.search("<body>"), string_html.search("</body>")+7);
+			tag_body = xmlhttp.responseText.substring(xmlhttp.responseText.search(/\)<\/h1>/) + 7, xmlhttp.responseText.search(/<ul class="paginas">/));
+			tag_body = tag_body.replace(/&/g,"");
+			
+			// Convierte el string <body>...</body> en objetos DOM
+			var parser = new DOMParser();
+			var tag_parse = parser.parseFromString(xmlhttp.responseText, "text/xml");
+
+			// Id del mensaje de u-cursos
+			var id_mensaje = url.split("/");
+			id_mensaje = "mensaje_" + id_mensaje[id_mensaje.length-1];
+
+	    	tag_div.innerHTML= "(5)";
+	    }
+	};
+
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
 }
 
 /*
