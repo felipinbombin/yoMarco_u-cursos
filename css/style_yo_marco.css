@@ -44,3 +44,9 @@ div.botones {
 .cancelar {
 	margin-left: 5px !important;
 }
+
+#cargar_info_tema {
+	width: 15px;
+	height: 15px;
+	float: left;
+}

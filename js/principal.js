@@ -15,22 +15,22 @@ function seguir_boton(e) {
 
 // Configuración para spin.js
 var opts = {
-  lines: 15, // The number of lines to draw
-  length: 2, // The length of each line
-  width: 4, // The line thickness
-  radius: 3, // The radius of the inner circle
-  corners: 1, // Corner roundness (0..1)
-  rotate: 90, // The rotation offset
-  direction: 1, // 1: clockwise, -1: counterclockwise
-  color: '#000', // #rgb or #rrggbb
-  speed: 1, // Rounds per second
-  trail: 68, // Afterglow percentage
-  shadow: false, // Whether to render a shadow
-  hwaccel: true, // Whether to use hardware acceleration
-  className: 'spinner', // The CSS class to assign to the spinner
-  zIndex: 2e9, // The z-index (defaults to 2000000000)
-  top: 'auto', // Top position relative to parent in px
-  left: 'auto' // Left position relative to parent in px
+	lines: 7, // The number of lines to draw
+	length: 0, // The length of each line
+	width: 4, // The line thickness
+	radius: 2, // The radius of the inner circle
+	corners: 1, // Corner roundness (0..1)
+	rotate: 1, // The rotation offset
+	direction: 1, // 1: clockwise, -1: counterclockwise
+	color: '#bb8a1d', // #rgb or #rrggbb
+	speed: 1, // Rounds per second
+	trail: 60, // Afterglow percentage
+	shadow: false, // Whether to render a shadow
+	hwaccel: false, // Whether to use hardware acceleration
+	className: 'spinner', // The CSS class to assign to the spinner
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	top: '2', // Top position relative to parent in px
+	left: '0' // Left position relative to parent in px
 };
 
 /** 
@@ -281,8 +281,8 @@ function cargar_marcas(){
 				
 				nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
 				nodo_h1_titulo.appendChild(nodo_a_titulo);
-				nodo_h1_titulo.appendChild(nodo_div_cargar);
 				nodo_td_titulo_fecha.appendChild(nodo_h1_titulo);
+				nodo_td_titulo_fecha.appendChild(nodo_div_cargar);
 				nodo_td_titulo_fecha.appendChild(nodo_h2_fecha);
 				nodo_td_comentario_url.appendChild(nodo_h1_comentario);
 				nodo_td_comentario_url.appendChild(nodo_h1_url);		
@@ -455,7 +455,6 @@ function eliminar_marca(e) {
 function actualizar_info_tema(tag_div) {
 
 	var spinner = new Spinner(opts).spin(tag_div);
-
 }
 
 /*
