@@ -440,7 +440,7 @@ function eliminar_marca(e) {
 		    	var fila = document.getElementById("fila-" + nombre_registro + "-" + id_registro);
 		    	
 		    	// Si la fila para comentar esta debajo de la fila a la eliminar -> se cierra.
-		    	if(fila.nextSibling.id == "fila_comentario")
+		    	if(fila != null && fila.nextSibling.id == "fila_comentario")
 		    		cerrar_form_comentar();
 		    	// Se elimina la fila de la tabla que contiene la marca
 		    	fila.parentNode.removeChild(fila);
