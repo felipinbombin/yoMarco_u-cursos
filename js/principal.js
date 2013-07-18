@@ -212,7 +212,7 @@ function cargar_marcas(){
 		var nodo_h1_titulo = null;
 		var nodo_h2_fecha = null;
 		var nodo_a_titulo = null;
-		var nodo_div_cargar = null;
+		var nodo_div_ctd_resp = null;
 		var nodo_h1_comentario = null;
 		var nodo_h1_span_comentario = null;
 		var nodo_h1_url = null;
@@ -238,9 +238,9 @@ function cargar_marcas(){
 
 				nodo_h1_titulo = document.createElement("h1");
 
-				nodo_div_cargar = document.createElement("div");
-				nodo_div_cargar.setAttribute("id", "cargar_info_tema");
-				nodo_div_cargar.setAttribute("class", "ayuda");
+				nodo_div_ctd_resp = document.createElement("div");
+				nodo_div_ctd_resp.setAttribute("id", "ctd_resp-" + registro + "-" + id);
+				nodo_div_ctd_resp.setAttribute("class", "ayuda ctd_resp");
 
 				nodo_h2_fecha = document.createElement("h2");
 				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[registro][id].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
@@ -248,9 +248,11 @@ function cargar_marcas(){
 				nodo_a_titulo = document.createElement("a");
 				nodo_a_titulo.setAttribute("href", almacen_json[registro][id].link);
 				nodo_a_titulo.setAttribute("target", "_blank");
+				nodo_a_titulo.setAttribute("id", "titulo-" + registro + "-" + id);
 				nodo_a_titulo.setAttribute("class", "Titulo");
 				nodo_a_titulo.appendChild(document.createTextNode(almacen_json[registro][id].titulo));
 				nodo_a_titulo.addEventListener("click", seguir_boton);
+				nodo_a_titulo.addEventListener("click", actualizar_ctd_resp);
 
 				nodo_h1_comentario = document.createElement("h1");
 				// cada tag donde va el comentario tiene id='comentario-registro-id'
@@ -282,7 +284,7 @@ function cargar_marcas(){
 				nodo_h1_comentario.appendChild(nodo_h1_span_comentario);
 				nodo_h1_titulo.appendChild(nodo_a_titulo);
 				nodo_td_titulo_fecha.appendChild(nodo_h1_titulo);
-				nodo_td_titulo_fecha.appendChild(nodo_div_cargar);
+				nodo_td_titulo_fecha.appendChild(nodo_div_ctd_resp);
 				nodo_td_titulo_fecha.appendChild(nodo_h2_fecha);
 				nodo_td_comentario_url.appendChild(nodo_h1_comentario);
 				nodo_td_comentario_url.appendChild(nodo_h1_url);		
@@ -296,7 +298,7 @@ function cargar_marcas(){
 
 				// Revisa si el tema tiene nuevos mensajes
 				if (almacen_json[registro][id].ctd_resp < 100)
-					actualizar_info_tema(nodo_div_cargar, nodo_a_titulo, almacen_json[registro][id].link, almacen_json[registro][id].ctd_resp);
+					actualizar_info_tema(nodo_div_ctd_resp, nodo_a_titulo, almacen_json[registro][id].link, almacen_json[registro][id].ctd_resp);
 			}
 		}
 	});
@@ -451,6 +453,26 @@ function eliminar_marca(e) {
 			});
 		});	
 	}
+}
+
+/**
+	Actualiza la cantidad de respuestas vistas una vez que se hace click en el titulo del tema.
+*/
+function actualizar_ctd_resp(e) {
+	var ctd_nueva_resp = parseInt(e.target.parentNode.nextSibling.childNodes[0].nodeValue.match(/[0-9]+/));
+
+	var nombre_registro = e.target.id.split("-")[1];
+	var id_registro = e.target.id.split("-")[2];
+
+	chrome.storage.sync.get(nombre_registro, function(almacen_json) {
+		// Se elimina la marca específicada por el id
+		almacen_json[nombre_registro][id_registro].ctd_resp = almacen_json[nombre_registro][id_registro].ctd_resp + ctd_nueva_resp;		
+		
+		// Se actualizan los datos
+		chrome.storage.sync.set(almacen_json, function() {
+			console.log("cantidad de mensajes leídos actualizado.");
+		});
+	});	
 }
 
 /**
