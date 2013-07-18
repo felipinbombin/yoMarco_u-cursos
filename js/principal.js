@@ -295,7 +295,8 @@ function cargar_marcas(){
 				nodo_tbody.appendChild(nodo_tr);
 
 				// Revisa si el tema tiene nuevos mensajes
-				actualizar_info_tema(nodo_div_cargar, nodo_a_titulo, almacen_json[registro][id].link, almacen_json[registro][id].ctd_resp);
+				if (almacen_json[registro][id].ctd_resp < 100)
+					actualizar_info_tema(nodo_div_cargar, nodo_a_titulo, almacen_json[registro][id].link, almacen_json[registro][id].ctd_resp);
 			}
 		}
 	});
@@ -457,7 +458,7 @@ function eliminar_marca(e) {
 	la cantidad de mensajes nuevos a la derecha del titulo
 */
 function actualizar_info_tema(tag_div, tag_titulo, url, ctd_respuestas) {
-	ctd_respuestas =0;
+	
 	// Aparece spin que indica que se esta consultando info del tema.
 	var spinner = new Spinner(opts).spin(tag_div);
 	var xmlhttp;
@@ -499,10 +500,12 @@ function actualizar_info_tema(tag_div, tag_titulo, url, ctd_respuestas) {
 					var cantidad_respuestas = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);
 
 					// Tiene nuevos comentarios
-					if (cantidad_respuestas > ctd_respuestas) {
+					if (cantidad_respuestas === ctd_respuestas) {
+						tag_div.innerHTML = "(0)";
+					} else if (cantidad_respuestas > ctd_respuestas) {
 						// Se resalta el titulo
 						tag_titulo.setAttribute("class", "tiene_mensajes");
-						tag_div.innerHTML = "(" + (cantidad_respuestas - ctd_respuestas) + ")";						
+						tag_div.innerHTML = "(" + (cantidad_respuestas - ctd_respuestas) + ")";	
 					}
 				}
 			}

@@ -1,4 +1,6 @@
 var titulo_texto = null;
+// cantidad de respuestas que tiene el hilo
+var ctd_resp = null;
 
 // una vez que se termina de cargar la pagina se ejecuta la función
 document.addEventListener('DOMContentLoaded', function () {
@@ -9,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var raiz = encontrar_raiz(tag);
         
         titulo_texto = raiz.childNodes[1].childNodes[2].childNodes[0].nodeValue;
+        ctd_resp = parseInt(raiz.childNodes[3].childNodes[0].nodeValue.split(" ")[0]);
+
         agregar_links(raiz);
     }
     
@@ -42,7 +46,8 @@ function agregar_evento_click_a_titulos() {
             var ref_titulo = this.parentNode.parentNode;
             // setea el titulo del tema, este valor se guarda junto con el link    
             titulo_texto = ref_titulo.childNodes[1].childNodes[2].childNodes[0].nodeValue;
-            
+            ctd_resp = parseInt(ref_titulo.childNodes[3].childNodes[0].nodeValue.split(" ")[0]);
+
             agregar_links(ref_titulo);
         });
     }
@@ -122,7 +127,8 @@ function agregar_link(permalink) {
                                 link: ref_link, 
                                 titulo: titulo_texto, 
                                 fecha_ingreso: fecha_ahora_con_formato(), 
-                                comentario: ""});
+                                comentario: "",
+                                ctd_resp: ctd_resp});
 
                             // se actualizan los datos
                             chrome.storage.sync.set(almacen_json, function() {
