@@ -50,3 +50,7 @@ div.botones {
 	height: 15px;
 	float: left;
 }
+
+a.tiene_mensajes {
+	font-weight: bold;
+}

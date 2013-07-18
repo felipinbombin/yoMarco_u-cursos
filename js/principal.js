@@ -44,56 +44,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Configuración de moment.js a español
 	moment.lang('es', {
-	    months : "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split("_"),
-	    monthsShort : "ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.".split("_"),
-	    weekdays : "domingo_lunes_martes_miércoles_jueves_viernes_sábado".split("_"),
-	    weekdaysShort : "dom._lun._mar._mié._jue._vie._sáb.".split("_"),
-	    weekdaysMin : "Do_Lu_Ma_Mi_Ju_Vi_Sá".split("_"),
-	    longDateFormat : {
-	        LT : "H:mm",
-	        L : "DD/MM/YYYY",
-	        LL : "D [de] MMMM [de] YYYY",
-	        LLL : "D [de] MMMM [de] YYYY LT",
-	        LLLL : "dddd, D [de] MMMM [de] YYYY LT"
-	    },
-	    calendar : {
-	        sameDay : function () {
-	            return '[hoy a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
-	        },
-	        nextDay : function () {
-	            return '[mañana a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
-	        },
-	        nextWeek : function () {
-	            return 'dddd [a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
-	        },
-	        lastDay : function () {
-	            return '[ayer a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
-	        },
-	        lastWeek : function () {
-	            return '[el] dddd [pasado a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
-	        },
-	        sameElse : 'L'
-	    },
-	    relativeTime : {
-	        future : "en %s",
-	        past : "hace %s",
-	        s : "unos segundos",
-	        m : "un minuto",
-	        mm : "%d minutos",
-	        h : "una hora",
-	        hh : "%d horas",
-	        d : "un día",
-	        dd : "%d días",
-	        M : "un mes",
-	        MM : "%d meses",
-	        y : "un año",
-	        yy : "%d años"
-	    },
-	    ordinal : '%dº',
-	    week : {
-	        dow : 1, // Monday is the first day of the week.
-	        doy : 4  // The week that contains Jan 4th is the first week of the year.
-	    }
+		months : "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split("_"),
+		monthsShort : "ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.".split("_"),
+		weekdays : "domingo_lunes_martes_miércoles_jueves_viernes_sábado".split("_"),
+		weekdaysShort : "dom._lun._mar._mié._jue._vie._sáb.".split("_"),
+		weekdaysMin : "Do_Lu_Ma_Mi_Ju_Vi_Sá".split("_"),
+		longDateFormat : {
+			LT : "H:mm",
+			L : "DD/MM/YYYY",
+			LL : "D [de] MMMM [de] YYYY",
+			LLL : "D [de] MMMM [de] YYYY LT",
+			LLLL : "dddd, D [de] MMMM [de] YYYY LT"
+		},
+		calendar : {
+			sameDay : function () {
+				return '[hoy a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+			},
+			nextDay : function () {
+				return '[mañana a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+			},
+			nextWeek : function () {
+				return 'dddd [a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+			},
+			lastDay : function () {
+				return '[ayer a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+			},
+			lastWeek : function () {
+				return '[el] dddd [pasado a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+			},
+			sameElse : 'L'
+		},
+		relativeTime : {
+			future : "en %s",
+			past : "hace %s",
+			s : "unos segundos",
+			m : "un minuto",
+			mm : "%d minutos",
+			h : "una hora",
+			hh : "%d horas",
+			d : "un día",
+			dd : "%d días",
+			M : "un mes",
+			MM : "%d meses",
+			y : "un año",
+			yy : "%d años"
+		},
+		ordinal : '%dº',
+		week : {
+			dow : 1, // Monday is the first day of the week.
+			doy : 4  // The week that contains Jan 4th is the first week of the year.
+		}
 	});
 
 	// Asocia un evento click al enlace 'créditos'
@@ -105,9 +105,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		else if (creditos.style.display == "none" || creditos.style.display == "" )
 			creditos.style.display = "block";
 	});
-  	
+	
 	// Asocia evento click al enlace mostrar JSON
-  	document.getElementById("toggle-json").addEventListener('click', function(){
+	document.getElementById("toggle-json").addEventListener('click', function(){
 		var json_marcas = document.getElementById("json");
 		this.innerHTML = "";
 
@@ -127,9 +127,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				ref_toggle_json.appendChild(document.createTextNode("<Ocultar json"));
 			});
 		}
-  	});
+	});
 
-  	cargar_marcas();
+	cargar_marcas();
 });
 
 /*
@@ -138,16 +138,16 @@ document.addEventListener('DOMContentLoaded', function () {
 function cargar_marcas(){
 	
 	chrome.storage.sync.get(null, function(almacen_json) {
-        
-        var hay_marcas = false;
+		
+		var hay_marcas = false;
 
-        // Busca si hay marcas para mostrar
-        for(registro in almacen_json){
-            if (almacen_json[registro].length > 0) {
-                hay_marcas = true;
-                break;
-            }
-        }
+		// Busca si hay marcas para mostrar
+		for(registro in almacen_json){
+			if (almacen_json[registro].length > 0) {
+				hay_marcas = true;
+				break;
+			}
+		}
 
 		var div = document.getElementById("lista_marcas");
 
@@ -241,7 +241,6 @@ function cargar_marcas(){
 				nodo_div_cargar = document.createElement("div");
 				nodo_div_cargar.setAttribute("id", "cargar_info_tema");
 				nodo_div_cargar.setAttribute("class", "ayuda");
-				actualizar_info_tema(nodo_div_cargar, almacen_json[registro][id].link);
 
 				nodo_h2_fecha = document.createElement("h2");
 				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[registro][id].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
@@ -294,6 +293,9 @@ function cargar_marcas(){
 				nodo_tr.appendChild(nodo_td_eliminar);
 				nodo_tr.appendChild(nodo_td_comentar);
 				nodo_tbody.appendChild(nodo_tr);
+
+				// Revisa si el tema tiene nuevos mensajes
+				actualizar_info_tema(nodo_div_cargar, nodo_a_titulo, almacen_json[registro][id].link);
 			}
 		}
 	});
@@ -412,12 +414,12 @@ function grabar_comentario(e) {
 			chrome.storage.sync.get(nombre_registro, function(almacen_json) {
 				almacen_json[nombre_registro][id_registro].comentario = comentario;
 				// se actualizan los datos
-			    chrome.storage.sync.set(almacen_json, function() {
-			    	// una vez guardado se cierra el form
-			    	cerrar_form_comentar(e);
-			    	var com = document.getElementById("comentario-" + nombre_registro + "-" + id_registro);
-			    	com.childNodes[0].nodeValue = comentario;
-			    });
+				chrome.storage.sync.set(almacen_json, function() {
+					// una vez guardado se cierra el form
+					cerrar_form_comentar(e);
+					var com = document.getElementById("comentario-" + nombre_registro + "-" + id_registro);
+					com.childNodes[0].nodeValue = comentario;
+				});
 			});
 		}
 	}
@@ -436,16 +438,16 @@ function eliminar_marca(e) {
 			almacen_json[nombre_registro].splice(id_registro, 1);		
 			
 			// Se actualizan los datos
-		    chrome.storage.sync.set(almacen_json, function() {
-		    	// fila de la marca que se va a eliminar
-		    	var fila = document.getElementById("fila-" + nombre_registro + "-" + id_registro);
-		    	
-		    	// Si la fila para comentar esta debajo de la fila a eliminar -> se cierra.
-		    	if(fila.nextSibling != null && fila.nextSibling.id == "fila_comentario")
-		    		cerrar_form_comentar();
-		    	// Se elimina la fila de la tabla que contiene la marca
-		    	fila.parentNode.removeChild(fila);
-		    });
+			chrome.storage.sync.set(almacen_json, function() {
+				// fila de la marca que se va a eliminar
+				var fila = document.getElementById("fila-" + nombre_registro + "-" + id_registro);
+				
+				// Si la fila para comentar esta debajo de la fila a eliminar -> se cierra.
+				if(fila.nextSibling != null && fila.nextSibling.id == "fila_comentario")
+					cerrar_form_comentar();
+				// Se elimina la fila de la tabla que contiene la marca
+				fila.parentNode.removeChild(fila);
+			});
 		});	
 	}
 }
@@ -454,13 +456,13 @@ function eliminar_marca(e) {
 	Llamada AJAX que revisa si el tema tiene nuevos mensajes, si es así destaca el titulo e imprime
 	la cantidad de mensajes nuevos a la derecha del titulo
 */
-function actualizar_info_tema(tag_div, url) {
+function actualizar_info_tema(tag_div, tag_titulo, url) {
 
-	// aparece spin
+	// Aparece spin que indica que se esta consultando info del tema.
 	var spinner = new Spinner(opts).spin(tag_div);
 	var xmlhttp;
 
-	if (window.XMLHttpRequest) {// código para IE7+, Firefox, Chrome, Opera, Safari
+	if (window.XMLHttpRequest) {// Código para IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp=new XMLHttpRequest();
 	} else {// código para IE6, IE5
 		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
@@ -484,9 +486,11 @@ function actualizar_info_tema(tag_div, url) {
 			// Id del mensaje de u-cursos
 			var id_mensaje = url.split("/");
 			id_mensaje = "mensaje_" + id_mensaje[id_mensaje.length-1];
-
-	    	tag_div.innerHTML= "(5)";
-	    }
+			
+			// Si tiene nuevos comentarios se remarca
+			tag_titulo.setAttribute("class", "tiene_mensajes");
+			tag_div.innerHTML= "(5)";
+		}
 	};
 
 	xmlhttp.open("GET", url, true);
