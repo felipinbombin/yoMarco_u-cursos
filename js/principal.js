@@ -295,7 +295,7 @@ function cargar_marcas(){
 				nodo_tbody.appendChild(nodo_tr);
 
 				// Revisa si el tema tiene nuevos mensajes
-				actualizar_info_tema(nodo_div_cargar, nodo_a_titulo, almacen_json[registro][id].link);
+				actualizar_info_tema(nodo_div_cargar, nodo_a_titulo, almacen_json[registro][id].link, almacen_json[registro][id].ctd_resp);
 			}
 		}
 	});
@@ -456,8 +456,8 @@ function eliminar_marca(e) {
 	Llamada AJAX que revisa si el tema tiene nuevos mensajes, si es así destaca el titulo e imprime
 	la cantidad de mensajes nuevos a la derecha del titulo
 */
-function actualizar_info_tema(tag_div, tag_titulo, url) {
-
+function actualizar_info_tema(tag_div, tag_titulo, url, ctd_respuestas) {
+	ctd_respuestas =0;
 	// Aparece spin que indica que se esta consultando info del tema.
 	var spinner = new Spinner(opts).spin(tag_div);
 	var xmlhttp;
@@ -476,20 +476,36 @@ function actualizar_info_tema(tag_div, tag_titulo, url) {
 			// Obtiene de la cadena el string <body>...</body>
 			var string_html = xmlhttp.responseText;
 			var tag_body = string_html.substring(string_html.search("<body>"), string_html.search("</body>")+7);
-			tag_body = xmlhttp.responseText.substring(xmlhttp.responseText.search(/\)<\/h1>/) + 7, xmlhttp.responseText.search(/<ul class="paginas">/));
-			tag_body = tag_body.replace(/&/g,"");
-			
+			//tag_body = xmlhttp.responseText.substring(xmlhttp.responseText.search(/\)<\/h1>/) + 7, xmlhttp.responseText.search(/<ul class="paginas">/));
+			//tag_body = tag_body.replace(/(\r\n|\n|\r)/gm,"");
+
+			/* NO FUNCIONA!!!
 			// Convierte el string <body>...</body> en objetos DOM
-			var parser = new DOMParser();
-			var tag_parse = parser.parseFromString(xmlhttp.responseText, "text/xml");
+			//var parser = new DOMParser();
+			var tag_parse = parser.parseFromString(xmlhttp.responseText, "text/xml");*/
 
 			// Id del mensaje de u-cursos
 			var id_mensaje = url.split("/");
 			id_mensaje = "mensaje_" + id_mensaje[id_mensaje.length-1];
 			
-			// Si tiene nuevos comentarios se resalta el titulo
-			tag_titulo.setAttribute("class", "tiene_mensajes");
-			tag_div.innerHTML= "(5)";
+			// crea un arreglo con el string de cada tema [inicio->raiz_tema1, raiz_tema1->raiz_tema2, etc...]
+			arr_body = tag_body.split(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
+			
+			for(var i=0;i<arr_body.length;i++) {
+				// Si el mensaje se encuentra en esta parte
+				if (arr_body[i].match(id_mensaje) != null) {
+					var arr_raiz = tag_body.match(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
+					
+					var cantidad_respuestas = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);
+
+					// Tiene nuevos comentarios
+					if (cantidad_respuestas > ctd_respuestas) {
+						// Se resalta el titulo
+						tag_titulo.setAttribute("class", "tiene_mensajes");
+						tag_div.innerHTML = "(" + (cantidad_respuestas - ctd_respuestas) + ")";						
+					}
+				}
+			}
 		}
 	};
 
