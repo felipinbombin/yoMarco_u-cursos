@@ -487,7 +487,7 @@ function actualizar_info_tema(tag_div, tag_titulo, url) {
 			var id_mensaje = url.split("/");
 			id_mensaje = "mensaje_" + id_mensaje[id_mensaje.length-1];
 			
-			// Si tiene nuevos comentarios se remarca
+			// Si tiene nuevos comentarios se resalta el titulo
 			tag_titulo.setAttribute("class", "tiene_mensajes");
 			tag_div.innerHTML= "(5)";
 		}
