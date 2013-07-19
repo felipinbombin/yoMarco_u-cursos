@@ -149,9 +149,10 @@ function cargar_marcas(){
 			}
 		}
 
+		// Tag div que contiene la tabla con las marcas
 		var div = document.getElementById("lista_marcas");
 
-		// si no hay nada almacenado se detiene
+		// si no hay nada almacenado se detiene y se muestra un mensaje
 		if (!hay_marcas){
 			var div_sin_marcas = document.createElement("div");
 
@@ -163,7 +164,7 @@ function cargar_marcas(){
 		}
 
 		/**
-			creación de tabla
+			creación de tabla para marcas
 		*/
 		var nodo_table = null;
 		var nodo_thead = null;
@@ -219,10 +220,24 @@ function cargar_marcas(){
 		var nodo_a_eliminar = null;
 		var nodo_a_comentario = null;
 
+		/**
+			Se construye cada fila(marca) de la tabla. Información relevante:
+			1) Cada fila de la tabla tiene id='fila-registro-id'
+			2) Cada div que muestra la cantidad de mensajes no leídos tiene id = 'ctd_resp-registro-id'
+			3) Cada tag a que representa el titulo de la marca lleva por id = 'titulo-registro-id'
+			4) Cada tag donde va el comentario tiene id='comentario-registro-id'
+			5) Cada tag donde va el link que elimina una marca tiene id='eliminar-registro-id'
+			6) Cada tag donde va el link que comenta una marca tiene id='comentar-registro-id'
+
+			Donde:
+
+			* 'registro' corresponde al elemento utilizado para guardar la marca.
+			* 'id' representa la posición dentro del registro donde esta guardado.
+		*/
 		for(registro in almacen_json){
 			for(var id=almacen_json[registro].length - 1; 0<=id; id--) {
 				
-				// cada fila de la tabla tiene id='fila-registro-id'
+				// Cada fila de la tabla tiene id='fila-registro-id'
 				nodo_tr = document.createElement("tr");
 				nodo_tr.setAttribute("id", "fila-" + registro + "-" + id);
 				nodo_tr.setAttribute("class", "odd");
@@ -238,6 +253,7 @@ function cargar_marcas(){
 
 				nodo_h1_titulo = document.createElement("h1");
 
+				// Cada div que muestra la cantidad de mensajes no leídos tiene id = 'ctd_resp-registro-id'
 				nodo_div_ctd_resp = document.createElement("div");
 				nodo_div_ctd_resp.setAttribute("id", "ctd_resp-" + registro + "-" + id);
 				nodo_div_ctd_resp.setAttribute("class", "ayuda ctd_resp");
@@ -245,6 +261,7 @@ function cargar_marcas(){
 				nodo_h2_fecha = document.createElement("h2");
 				nodo_h2_fecha.appendChild(document.createTextNode(moment(almacen_json[registro][id].fecha_ingreso,"YYYY/MM/DD HH:mm:ss").lang('es').fromNow()));
 
+				// Cada tag a que representa el titulo de la marca lleva por id = 'titulo-registro-id'
 				nodo_a_titulo = document.createElement("a");
 				nodo_a_titulo.setAttribute("href", almacen_json[registro][id].link);
 				nodo_a_titulo.setAttribute("target", "_blank");
@@ -255,7 +272,7 @@ function cargar_marcas(){
 				nodo_a_titulo.addEventListener("click", actualizar_ctd_resp);
 
 				nodo_h1_comentario = document.createElement("h1");
-				// cada tag donde va el comentario tiene id='comentario-registro-id'
+				// Cada tag donde va el comentario tiene id='comentario-registro-id'
 				nodo_h1_span_comentario = document.createElement("span");
 				nodo_h1_span_comentario.setAttribute("id", "comentario-" + registro + "-" + id);
 				nodo_h1_span_comentario.appendChild(document.createTextNode(almacen_json[registro][id].comentario)); 
@@ -263,7 +280,7 @@ function cargar_marcas(){
 				nodo_h1_url = document.createElement("h2");
 				nodo_h1_url.appendChild(document.createTextNode(almacen_json[registro][id].link));
 
-				// cada tag donde va el link que elimina una marca tiene id='eliminar-registro-id'
+				// Cada tag donde va el link que elimina una marca tiene id='eliminar-registro-id'
 				nodo_a_eliminar = document.createElement("a");
 				nodo_a_eliminar.setAttribute("href", "#");
 				nodo_a_eliminar.setAttribute("id", "eliminar-" + registro + "-" + id);
@@ -272,7 +289,7 @@ function cargar_marcas(){
 				nodo_a_eliminar.addEventListener("click", seguir_boton);
 				nodo_a_eliminar.addEventListener("click", eliminar_marca);
 				
-				// cada tag donde va el link que comenta una marca tiene id='comentar-registro-id'
+				// Cada tag donde va el link que comenta una marca tiene id='comentar-registro-id'
 				nodo_a_comentario = document.createElement("a");
 				nodo_a_comentario.setAttribute("href", "#");
 				nodo_a_comentario.setAttribute("id", "comentar-" + registro + "-" + id);
@@ -312,14 +329,14 @@ function comentar(e) {
 	var fila_comentario = document.getElementById("fila_comentario");
 
 	/**
-		Si no hay un form comentar, se agrega, de lo contrario se revisa si el existente
-		es para la misma marca, si es así, no se hace nada, de lo contrario se elimina el existente y se agrega uno para la marca actual.
+		Si no hay un form comentar, se agrega, de lo contrario se revisa si el existente es para la misma marca, si es así, 
+		no se hace nada, de lo contrario se elimina el existente y se agrega uno para la marca actual.
 	*/
 	if (fila_comentario === null)
 		abrir_comentario(fila_marca);
 	else if (fila_comentario.previousSibling != fila_marca) {
 		fila_comentario.parentNode.removeChild(fila_comentario);
-		abrir_comentario(fila_marca);		
+		abrir_comentario(fila_marca);
 	}
 }
 
@@ -328,9 +345,8 @@ function comentar(e) {
 */
 function abrir_comentario(fila_marca) {
 
-	var arr_id_marca = fila_marca.id.split("-");
-	var nombre_registro = arr_id_marca[1];
-	var id_registro = arr_id_marca[2];
+	var nombre_registro = fila_marca.id.split("-")[1];
+	var id_registro = fila_marca.id.split("-")[2];
 
 	var tr_comentario = null;
 	var td_responder = null;
@@ -357,6 +373,7 @@ function abrir_comentario(fila_marca) {
 	textarea = document.createElement("textarea");
 	textarea.setAttribute("type", "text");
 	textarea.setAttribute("name", "comentario");
+	textarea.setAttribute("id", "texto_comentario");
 	textarea.setAttribute("placeholder", "...");
 	chrome.storage.sync.get(nombre_registro, function(almacen_json) {
 		textarea.appendChild(document.createTextNode(almacen_json[nombre_registro][id_registro].comentario));
@@ -403,12 +420,11 @@ function cerrar_form_comentar() {
 
 function grabar_comentario(e) {
 	// Tag <tr> de la marca asociada al comentario
-	var arr_fila = e.target.id.split("-");
-	var nombre_registro = arr_fila[1];
-	var id_registro = arr_fila[2];
+	var nombre_registro = e.target.id.split("-")[1];
+	var id_registro = e.target.id.split("-")[2];
 
 	// Comentario ingresado en el textarea
-	var comentario = document.getElementsByTagName("textarea")[0].value;
+	var comentario = document.getElementById("texto_comentario").value;
 
 	if (comentario != null) {
 		if (comentario.length > 50) {
@@ -430,10 +446,8 @@ function grabar_comentario(e) {
 
 function eliminar_marca(e) {
 
-	var arr_id = e.target.id.split("-");
-	
-	var nombre_registro = arr_id[1];
-	var id_registro = arr_id[2];
+	var nombre_registro = e.target.id.split("-")[1];
+	var id_registro = e.target.id.split("-")[2];
 
 	if (confirm("¿Estás segur@ que deseas eliminar la marca?")) {
 		chrome.storage.sync.get(nombre_registro, function(almacen_json) {
@@ -477,30 +491,29 @@ function actualizar_ctd_resp(e) {
 
 /**
 	Llamada AJAX que revisa si el tema tiene nuevos mensajes, si es así destaca el titulo e imprime
-	la cantidad de mensajes nuevos a la derecha del titulo
+	la cantidad de mensajes nuevos debajo de este
 */
-function actualizar_info_tema(tag_div, tag_titulo, url, ctd_respuestas) {
+function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
 	
 	// Aparece spin que indica que se esta consultando info del tema.
 	var spinner = new Spinner(opts).spin(tag_div);
 	var xmlhttp;
 
 	if (window.XMLHttpRequest) {// Código para IE7+, Firefox, Chrome, Opera, Safari
-		xmlhttp=new XMLHttpRequest();
-	} else {// código para IE6, IE5
-		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		xmlhttp = new XMLHttpRequest();
+	} else {// Código para IE6, IE5
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	
 	xmlhttp.onreadystatechange = function() {
-		// Si el servidor responde positivamente (sin errores = 200) y termino la llamada
+		// Si el servidor responde positivamente (sin errores = 200) y terminó la llamada
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			// Se detiene el spin
 			spinner.stop();
 
 			// Obtiene de la cadena el string <body>...</body>
 			var string_html = xmlhttp.responseText;
 			var tag_body = string_html.substring(string_html.search("<body>"), string_html.search("</body>")+7);
-			//tag_body = xmlhttp.responseText.substring(xmlhttp.responseText.search(/\)<\/h1>/) + 7, xmlhttp.responseText.search(/<ul class="paginas">/));
-			//tag_body = tag_body.replace(/(\r\n|\n|\r)/gm,"");
 
 			/* NO FUNCIONA!!!
 			// Convierte el string <body>...</body> en objetos DOM
@@ -511,23 +524,26 @@ function actualizar_info_tema(tag_div, tag_titulo, url, ctd_respuestas) {
 			var id_mensaje = url.split("/");
 			id_mensaje = "mensaje_" + id_mensaje[id_mensaje.length-1];
 			
-			// crea un arreglo con el string de cada tema [inicio->raiz_tema1, raiz_tema1->raiz_tema2, etc...]
+			// Crea un arreglo con el string de cada tema [inicio->raiz_tema1, raiz_tema1->raiz_tema2, etc...]
 			arr_body = tag_body.split(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
 			
 			for(var i=0;i<arr_body.length;i++) {
-				// Si el mensaje se encuentra en esta parte
+				// Si id_mensaje se encuentra en esta sección del arreglo del body
 				if (arr_body[i].match(id_mensaje) != null) {
+					// Se recupera la sección del titulo
 					var arr_raiz = tag_body.match(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
 					
-					var cantidad_respuestas = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);
+					// Se obtiene la cantidad de respuestas que tiene actualmente
+					var nueva_ctd_resp = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);
 
-					// Tiene nuevos comentarios
-					if (cantidad_respuestas === ctd_respuestas) {
+					if (nueva_ctd_resp === vieja_ctd_resp) {
 						tag_div.innerHTML = "(0)";
-					} else if (cantidad_respuestas > ctd_respuestas) {
+					} else if (nueva_ctd_resp > vieja_ctd_resp) {
 						// Se resalta el titulo
-						tag_titulo.setAttribute("class", "tiene_mensajes");
-						tag_div.innerHTML = "(" + (cantidad_respuestas - ctd_respuestas) + ")";	
+						tag_titulo.setAttribute("class", "Titulo tiene_mensajes");
+						tag_div.innerHTML = "(" + (nueva_ctd_resp - vieja_ctd_resp) + ")";	
+					} else {
+						alert("ni idea que onda : nueva_ctd_resp = " + nueva_ctd_resp + " | vieja_ctd_resp = " + vieja_ctd_resp);
 					}
 				}
 			}
