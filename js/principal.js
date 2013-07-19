@@ -313,9 +313,12 @@ function cargar_marcas(){
 				nodo_tr.appendChild(nodo_td_comentar);
 				nodo_tbody.appendChild(nodo_tr);
 
-				// Revisa si el tema tiene nuevos mensajes
+				// Revisa si el tema tiene nuevos mensajes( 100 = cantidad máxima de mensajes que puede haber en un hilo)
 				if (almacen_json[registro][id].ctd_resp < 100)
-					actualizar_info_tema(nodo_div_ctd_resp, nodo_a_titulo, almacen_json[registro][id].link, almacen_json[registro][id].ctd_resp);
+					actualizar_info_tema(nodo_div_ctd_resp, 
+										 nodo_a_titulo, 
+										 almacen_json[registro][id].link, 
+										 almacen_json[registro][id].ctd_resp);
 			}
 		}
 	});
