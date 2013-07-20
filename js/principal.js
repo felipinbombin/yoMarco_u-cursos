@@ -497,10 +497,6 @@ function actualizar_ctd_resp(e) {
 	la cantidad de mensajes nuevos debajo de este
 */
 function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
-	var tag_div = tag_div;
-	var tag_titulo = tag_titulo;
-	var url = url;
-	var vieja_ctd_resp = vieja_ctd_resp;
 
 	// Aparece spin que indica que se esta consultando info del tema.
 	var spinner = new Spinner(opts).spin(tag_div);
@@ -513,8 +509,15 @@ function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
 	}
 	
 	xmlhttp.onreadystatechange = function() {
-		// Si el servidor responde positivamente (sin errores = 200) y terminó la llamada
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		
+		// Si el usuario no esta logeado
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 403) {
+			// Se detiene el spin
+			spinner.stop();
+			tag_div.innerHTML = "---";
+
+			// Si el servidor responde positivamente (sin errores = 200) y terminó la llamada
+		} else if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			// Se detiene el spin
 			spinner.stop();
 			
