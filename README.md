@@ -12,6 +12,7 @@ Si tienes alguna sugerencia enviame un correo cephei.1313@gmail.com :-)
 Cambios futuros
 ------------
 
+1. implementar scroll infinito.
 1. Detectar cuando un hilo tiene nuevos comentarios.
 2. Indicar la cantidad de nuevos comentarios.
 
