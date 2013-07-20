@@ -497,7 +497,11 @@ function actualizar_ctd_resp(e) {
 	la cantidad de mensajes nuevos debajo de este
 */
 function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
-	
+	var tag_div = tag_div;
+	var tag_titulo = tag_titulo;
+	var url = url;
+	var vieja_ctd_resp = vieja_ctd_resp;
+
 	// Aparece spin que indica que se esta consultando info del tema.
 	var spinner = new Spinner(opts).spin(tag_div);
 	var xmlhttp;
@@ -513,11 +517,11 @@ function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			// Se detiene el spin
 			spinner.stop();
-
+			
 			// Obtiene de la cadena el string <body>...</body>
 			var string_html = xmlhttp.responseText;
 			var tag_body = string_html.substring(string_html.search("<body>"), string_html.search("</body>")+7);
-
+			
 			/* NO FUNCIONA!!!
 			// Convierte el string <body>...</body> en objetos DOM
 			//var parser = new DOMParser();
@@ -528,27 +532,36 @@ function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
 			id_mensaje = "mensaje_" + id_mensaje[id_mensaje.length-1];
 			
 			// Crea un arreglo con el string de cada tema [inicio->raiz_tema1, raiz_tema1->raiz_tema2, etc...]
-			arr_body = tag_body.split(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
-			
-			for(var i=0;i<arr_body.length;i++) {
-				// Si id_mensaje se encuentra en esta sección del arreglo del body
-				if (arr_body[i].match(id_mensaje) != null) {
-					// Se recupera la sección del titulo
-					var arr_raiz = tag_body.match(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
-					
-					// Se obtiene la cantidad de respuestas que tiene actualmente
-					var nueva_ctd_resp = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);
+			var arr_body = tag_body.split(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
+			// Crea un arreglo con los titulos de cada tema, incluye la cantidad de respuestas
+			var arr_raiz = tag_body.match(/<div id="mensaje_[0-9]*" class=".* raiz.*">.*\n.*\n.*\n.*/g);
 
-					if (nueva_ctd_resp === vieja_ctd_resp) {
-						tag_div.innerHTML = "(0)";
-					} else if (nueva_ctd_resp > vieja_ctd_resp) {
-						// Se resalta el titulo
-						tag_titulo.setAttribute("class", "Titulo tiene_mensajes");
-						tag_div.innerHTML = "(" + (nueva_ctd_resp - vieja_ctd_resp) + ")";	
-					} else {
-						alert("ni idea que onda : nueva_ctd_resp = " + nueva_ctd_resp + " | vieja_ctd_resp = " + vieja_ctd_resp);
-					}
+			var nueva_ctd_resp = null;
+
+			for(var i=0;i<arr_body.length;i++) {
+				
+				// Si la marca correspone al mensaje raiz
+				if (i < (arr_raiz.length-1)  && arr_raiz[i].match(id_mensaje) != null) {
+					// Se obtiene la cantidad de respuestas que tiene actualmente
+					nueva_ctd_resp = parseInt(arr_raiz[i].match(/[0-9]* resp/g)[0].split(" ")[0]);
+					
+					// Si id_mensaje se encuentra en esta sección del arreglo del body
+				} else if (arr_body[i].match(id_mensaje) != null) {
+					// Se obtiene la cantidad de respuestas que tiene actualmente
+					nueva_ctd_resp = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);
+				} else
+					continue;
+				
+				if (nueva_ctd_resp === vieja_ctd_resp) {
+					tag_div.innerHTML = "(0)";
+				} else if (nueva_ctd_resp > vieja_ctd_resp) {
+					// Se resalta el titulo
+					tag_titulo.setAttribute("class", "Titulo tiene_mensajes");
+					tag_div.innerHTML = "(" + (nueva_ctd_resp - vieja_ctd_resp) + ")";	
+				} else {
+					alert("ni idea que onda : nueva_ctd_resp = " + nueva_ctd_resp + " | vieja_ctd_resp = " + vieja_ctd_resp);
 				}
+				break;
 			}
 		}
 	};
