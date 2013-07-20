@@ -29,6 +29,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
     switch(details.reason) {
         case "install":
             /** 
+                Desde versión 1.1.3
                 Se crean los arreglos que almacenarán las marcas. Cada uno almacena un máximo de 19 marcas.
                 i.e. : 190 links máximo
                 limitación de chrome.storage.sync
@@ -51,6 +52,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
             chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
             break;
         case "update":
+            // para compatibilidad con versiones anteriores a 1.1.3
             chrome.storage.sync.get(null, function(almacen_json) {
                 for(marcas in almacen_json){
                     if(marcas === "marcas"){
@@ -71,8 +73,19 @@ chrome.runtime.onInstalled.addListener(function(details) {
                         chrome.storage.sync.remove("marcas", function() {
                                 console.log("arreglo 'marcas' borrado.");
                         }); 
-                        
-                        break;
+                    }
+                    break;
+                }
+
+            });
+
+            // para compatibilidad con versiones anteriores a 1.3.4
+            chrome.storage.sync.get(null, function(almacen_json) {
+                for(registro in almacen_json){
+                    for(var id=0; id<almacen_json[registro].length; i++){
+                        if (!almacen_json[registro].ctd_resp){
+                            almacen_json[registro].ctd_resp = 0;
+                        }
                     }
                 }
             });
