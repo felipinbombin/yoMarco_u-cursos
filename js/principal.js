@@ -510,20 +510,20 @@ function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
 	
 	xmlhttp.onreadystatechange = function() {
 		
-		// Si el usuario no esta logeado
+		// Si el usuario no esta logeado en www.u-cursos.cl
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 403) {
 			// Se detiene el spin
 			spinner.stop();
 			tag_div.innerHTML = "---";
 
-			// Si el servidor responde positivamente (sin errores = 200) y terminó la llamada
+			// Si el servidor responde positivamente (sin errores) y terminó la llamada
 		} else if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			// Se detiene el spin
 			spinner.stop();
 			
 			// Obtiene de la cadena el string <body>...</body>
-			var string_html = xmlhttp.responseText;
-			var tag_body = string_html.substring(string_html.search("<body>"), string_html.search("</body>")+7);
+			var str_html = xmlhttp.responseText;
+			var tag_body = str_html.substring(str_html.search("<body>"), str_html.search("</body>")+7);
 			
 			/* NO FUNCIONA!!!
 			// Convierte el string <body>...</body> en objetos DOM
@@ -548,7 +548,7 @@ function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
 					// Se obtiene la cantidad de respuestas que tiene actualmente
 					nueva_ctd_resp = parseInt(arr_raiz[i].match(/[0-9]* resp/g)[0].split(" ")[0]);
 					
-					// Si id_mensaje se encuentra en esta sección del arreglo del body
+					// Si la marca se encuentra en esta sección del arreglo del body
 				} else if (arr_body[i].match(id_mensaje) != null) {
 					// Se obtiene la cantidad de respuestas que tiene actualmente
 					nueva_ctd_resp = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);

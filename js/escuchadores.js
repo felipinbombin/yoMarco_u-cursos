@@ -76,15 +76,14 @@ chrome.runtime.onInstalled.addListener(function(details) {
                     }
                     break;
                 }
-
             });
 
             // para compatibilidad con versiones anteriores a 1.3.4
             chrome.storage.sync.get(null, function(almacen_json) {
                 for(registro in almacen_json){
-                    for(var id=0; id<almacen_json[registro].length; i++){
-                        if (!almacen_json[registro].ctd_resp){
-                            almacen_json[registro].ctd_resp = 0;
+                    for(var id=0; id<almacen_json[registro].length; id++){
+                        if (!almacen_json[registro][id].ctd_resp){
+                            almacen_json[registro][id].ctd_resp = 0;
                         }
                     }
                 }
