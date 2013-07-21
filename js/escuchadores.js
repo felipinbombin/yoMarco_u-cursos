@@ -3,8 +3,7 @@
     cada vez que se hace un cambio al elemento marcas
 */
 chrome.storage.onChanged.addListener(function(changes, namespace) {
-    console.log("Se actualiza el badge.");
-    
+
     for(marcas in changes){
         var dif = 0;
         chrome.storage.sync.get(null, function(almacen_json) {
@@ -44,54 +43,106 @@ chrome.runtime.onInstalled.addListener(function(details) {
                      marcas6: [],
                      marcas7: [],
                      marcas8: [],
-                     marcas9: [],}, 
+                     marcas9: []}, 
                 function() {
                     console.log('creado arreglos base.');
             });
             // el color de fondo del badge es rojo
             chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
             break;
-        case "update":
-            // para compatibilidad con versiones anteriores a 1.1.3
-            chrome.storage.sync.get(null, function(almacen_json) {
-                for(marcas in almacen_json){
-                    if(marcas === "marcas"){
-                        chrome.storage.sync.set(
-                                {marcas0: almacen_json.marcas,
-                                 marcas1: [],
-                                 marcas2: [],
-                                 marcas3: [],
-                                 marcas4: [],
-                                 marcas5: [],
-                                 marcas6: [],
-                                 marcas7: [],
-                                 marcas8: [],
-                                 marcas9: [],}, 
-                            function() {
-                                console.log('creado arreglos base.');
-                        }); 
-                        chrome.storage.sync.remove("marcas", function() {
-                                console.log("arreglo 'marcas' borrado.");
-                        }); 
-                    }
-                    break;
-                }
-            });
 
-            // para compatibilidad con versiones anteriores a 1.3.4
-            chrome.storage.sync.get(null, function(almacen_json) {
-                for(registro in almacen_json){
-                    for(var id=0; id<almacen_json[registro].length; id++){
-                        if (!almacen_json[registro][id].ctd_resp){
-                            almacen_json[registro][id].ctd_resp = 0;
-                        }
-                    }
-                }
-            });
+        case "update":
+            // para compatibilidad con versiones anteriores a 1.0.0
+            if(typeof localStorage["marcas"] != "undefined") {
+                actualizacion_pasar_a_storage_sync();
+
+            // para compatibilidad con versiones anteriores a 1.1.3
+            } else {
+                actualizacion_expandir_storage_sync();
+            }
+            
             break;
+            
         case "chrome_update":
 
             break;
     }
     return true;
 });
+
+/**
+    Compatibilidad con versiones anteriores a 1.0.0
+    Cambia el modo de almacenamiento de uno local a uno sincronizado (chrome.storage.sync).
+*/
+function actualizacion_pasar_a_storage_sync() {
+    chrome.storage.sync.set({marcas: JSON.parse(localStorage["marcas"])}, function() {
+                console.log('Actualizado arreglo base. Adaptado desde localStorage a storage.sync');
+                localStorage.clear();
+                actualizacion_expandir_storage_sync();
+    });
+}
+
+/**
+    Compatibilidad con versiones anteriores a 1.1.3
+    Agrega más registros a storage.sync para aumentar la cantidad de marcas que se pueden guardar.
+*/
+function actualizacion_expandir_storage_sync() {
+    var registro = "marcas";
+    
+    chrome.storage.sync.get(registro, function(almacen_json) {
+        if(almacen_json[registro] != null){
+            chrome.storage.sync.set(
+                    {marcas0: almacen_json[registro],
+                     marcas1: [],
+                     marcas2: [],
+                     marcas3: [],
+                     marcas4: [],
+                     marcas5: [],
+                     marcas6: [],
+                     marcas7: [],
+                     marcas8: [],
+                     marcas9: []}, 
+                function() {
+                    console.log("Actualizado arreglos base. Expansión de memoria a 10 registros.");
+                    chrome.storage.sync.remove(registro, function() {
+                            console.log("Actualizado arreglos base. Se elimina registro 'marcas'.");
+                            actualizacion_agregar_ctd_resp_a_storage_sync();
+                    }); 
+            });
+        }
+    });
+}
+
+/**
+    Compatibilidad con versiones anteriores a 1.3.4.
+    Agrega la propiedad ctd_resp a cada marca para que pueda sincronizar los comentarios del hilo asociado a la marca.
+*/
+function actualizacion_agregar_ctd_resp_a_storage_sync() {
+
+    chrome.storage.sync.get(null, function(almacen_json) {
+        for(registro in almacen_json){
+            for(var id=0; id<almacen_json[registro].length; id++){
+                if (!almacen_json[registro][id].ctd_resp){
+                    almacen_json[registro][id].ctd_resp = 0;
+                    almacen_json[registro][id].fecha_ingreso = adaptar_fecha(almacen_json[registro][id].fecha_ingreso);
+                    console.log("se crea propiedad ctd_resp para marca : " + almacen_json[registro][id].titulo);
+                }
+            }
+        }
+
+        chrome.storage.sync.set(almacen_json, function(){
+            console.log("Se agregó propiedad ctd_resp a cada marca satisfactoriamente.");
+        });
+    });
+}
+
+/**
+    transforma un string de fecha con formato dd/mm/aaaa hh:mm:ss a aaaa/mm/dd hh:mm:ss
+*/
+function adaptar_fecha(fecha){
+    if (fecha.match(/[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}/)) {
+        fecha = fecha.split("/");
+        return fecha[2].substring(0,4) + "/" + fecha[1] + "/" + fecha[0] + fecha[2].substring(4,fecha[2].length);
+    } else 
+        return fecha;
+}
