@@ -8,8 +8,8 @@ _gaq.push(['_setAccount', 'UA-42211163-1']);
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 
-function seguir_instalacion() {
-    _gaq.push(['_trackEvent', "extension", 'installed']);
+function seguir_instalacion(evento) {
+    _gaq.push(['_trackEvent', "extension", evento]);
 }
 
 /**
@@ -65,7 +65,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
             chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
 
             // Informó que se instalo la extensión.
-            seguir_instalacion();
+            seguir_instalacion("instalado");
 
             break;
 
@@ -79,6 +79,9 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 actualizacion_expandir_storage_sync();
             }
             
+            // Informó que se actualizó la extensión.
+            seguir_instalacion("actualizado");
+
             break;
             
         case "chrome_update":
