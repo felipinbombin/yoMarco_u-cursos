@@ -10,7 +10,7 @@ _gaq.push(['_trackPageview']);
 })();
 
 function seguir_boton(e) {
-	_gaq.push(['_trackEvent', e.target.className, 'clicked']);
+	_gaq.push(['_trackEvent',  "extensión " +  chrome.app.getDetails().version, 'clicked', e.target.className]);
 }
 
 // Configuración para spin.js
@@ -39,8 +39,8 @@ var opts = {
 document.addEventListener('DOMContentLoaded', function () {
 
 	// Seguimiento a los link de repositorio y documentación
-	document.getElementById("link_repositorio").addEventListener("click",seguir_boton);
-	document.getElementById("link_documentacion").addEventListener("click",seguir_boton);
+	document.getElementById("link_repositorio").addEventListener("click", seguir_boton);
+	document.getElementById("link_documentacion").addEventListener("click", seguir_boton);
 
 	// Configuración de moment.js a español
 	moment.lang('es', {
@@ -318,7 +318,8 @@ function cargar_marcas(){
 					actualizar_info_tema(nodo_div_ctd_resp, 
 										 nodo_a_titulo, 
 										 almacen_json[registro][id].link, 
-										 almacen_json[registro][id].ctd_resp);
+										 almacen_json[registro][id].ctd_resp,
+										 nodo_a_titulo);
 			}
 		}
 	});
@@ -496,7 +497,7 @@ function actualizar_ctd_resp(e) {
 	Llamada AJAX que revisa si el tema tiene nuevos mensajes, si es así destaca el titulo e imprime
 	la cantidad de mensajes nuevos debajo de este
 */
-function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
+function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp, nodo_a_titulo) {
 
 	// Aparece spin que indica que se esta consultando info del tema.
 	var spinner = new Spinner(opts).spin(tag_div);
@@ -547,20 +548,41 @@ function actualizar_info_tema(tag_div, tag_titulo, url, vieja_ctd_resp) {
 				if (i < (arr_raiz.length-1)  && arr_raiz[i].match(id_mensaje) != null) {
 					// Se obtiene la cantidad de respuestas que tiene actualmente
 					nueva_ctd_resp = parseInt(arr_raiz[i].match(/[0-9]* resp/g)[0].split(" ")[0]);
-					
+					//===========================================================================================================
+					/* 
+						Recupera el id del último mensaje agregado para corregir el permalink, así
+						la página se abrirá en el mensaje nuevo y no donde se registro la marca.
+					*/
+					var nuevo_mensaje = arr_body[i+1].match(/ultimo_[0-9]*/);
+					if (nuevo_mensaje != null)
+						nuevo_mensaje = nuevo_mensaje[0].match(/[0-9]*/);
+						nodo_a_titulo.setAttribute("href", url.match(/.*[^0-9]/) + nuevo_mensaje[0]);
+					//===========================================================================================================
+
 					// Si la marca se encuentra en esta sección del arreglo del body
 				} else if (arr_body[i].match(id_mensaje) != null) {
 					// Se obtiene la cantidad de respuestas que tiene actualmente
 					nueva_ctd_resp = parseInt(arr_raiz[i-1].match(/[0-9]* resp/g)[0].split(" ")[0]);
+					//===========================================================================================================
+					/* 
+						Recupera el id del último mensaje agregado para corregir el permalink, así
+						la página se abrirá en el mensaje nuevo y no donde se registro la marca.
+					*/
+					var nuevo_mensaje = arr_body[i].match(/ultimo_[0-9]*/);
+					if (nuevo_mensaje != null)
+						nuevo_mensaje = nuevo_mensaje[0].match(/[0-9]*/);
+						nodo_a_titulo.setAttribute("href", url.match(/.*[^0-9]/) + nuevo_mensaje[0]);
+					//===========================================================================================================
+
 				} else
 					continue;
-				
+
 				if (nueva_ctd_resp === vieja_ctd_resp) {
 					tag_div.innerHTML = "(0)";
 				} else if (nueva_ctd_resp > vieja_ctd_resp) {
 					// Se resalta el titulo
 					tag_titulo.setAttribute("class", "Titulo tiene_mensajes");
-					tag_div.innerHTML = "(" + (nueva_ctd_resp - vieja_ctd_resp) + ")";	
+					tag_div.innerHTML = "(" + (nueva_ctd_resp - vieja_ctd_resp) + ")";
 				} else {
 					alert("ni idea que onda : nueva_ctd_resp = " + nueva_ctd_resp + " | vieja_ctd_resp = " + vieja_ctd_resp);
 				}

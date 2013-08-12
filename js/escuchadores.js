@@ -9,7 +9,7 @@ _gaq.push(['_setAccount', 'UA-42211163-1']);
 })();
 
 function seguir_instalacion(evento) {
-    _gaq.push(['_trackEvent', "extension", evento]);
+    _gaq.push(['_trackEvent', "extensión " +  chrome.app.getDetails().version, evento]);
 }
 
 /**
@@ -81,6 +81,9 @@ chrome.runtime.onInstalled.addListener(function(details) {
             
             // Informó que se actualizó la extensión.
             seguir_instalacion("actualizado");
+
+            // el color de fondo del badge es rojo
+            chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
 
             break;
             
