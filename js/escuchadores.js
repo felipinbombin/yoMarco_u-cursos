@@ -47,24 +47,35 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 i.e. : 190 links máximo
                 limitación de chrome.storage.sync
             */
-            chrome.storage.sync.set(
-                    {marcas0: [],
-                     marcas1: [],
-                     marcas2: [],
-                     marcas3: [],
-                     marcas4: [],
-                     marcas5: [],
-                     marcas6: [],
-                     marcas7: [],
-                     marcas8: [],
-                     marcas9: []}, 
-                function() {
-                    console.log('creado arreglos base.');
+            var registro = "marcas";
+            var registro0 = "marcas0";
+
+            chrome.storage.sync.get(registro, function (almacen_json) {
+                
+                if(almacen_json[registro0] != "undefined") { 
+                    /* No existen las marcas, se crean */
+                    chrome.storage.sync.set(
+                            {marcas0: [],
+                             marcas1: [],
+                             marcas2: [],
+                             marcas3: [],
+                             marcas4: [],
+                             marcas5: [],
+                             marcas6: [],
+                             marcas7: [],
+                             marcas8: [],
+                             marcas9: []}, 
+                        function() {
+                            console.log('creado arreglos base.');
+                    });
+                }
+
             });
+
             // el color de fondo del badge es rojo
             chrome.browserAction.setBadgeBackgroundColor({color: "#e10c12"});
 
-            // Informó que se instalo la extensión.
+            // Informó que se instaló la extensión.
             seguir_instalacion("instalado");
 
             break;
@@ -73,7 +84,6 @@ chrome.runtime.onInstalled.addListener(function(details) {
             // para compatibilidad con versiones anteriores a 1.0.0
             if(typeof localStorage["marcas"] != "undefined") {
                 actualizacion_pasar_a_storage_sync();
-
             // para compatibilidad con versiones anteriores a 1.1.3
             } else {
                 actualizacion_expandir_storage_sync();

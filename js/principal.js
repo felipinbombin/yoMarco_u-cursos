@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		if (json_marcas.style.display == "block") {
 			json_marcas.style.display = "none";
-				
+			
 			this.appendChild(document.createTextNode(">Mostrar json"));
 		} else if (json_marcas.style.display == "none" || json_marcas.style.display == "" ) {
 
